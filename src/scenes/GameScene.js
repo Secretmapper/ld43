@@ -13,12 +13,13 @@ class GameScene extends Phaser.Scene {
   create () {
     this.player = new Player({
       scene: this,
-      x: 200,
-      y: 50,
       controls: {
         action: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+        cancel: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
         cursors: this.input.keyboard.createCursorKeys()
-      }
+      },
+      x: 200,
+      y: 50,
     })
     this.building = new Building({ scene: this, x: 200, y: 300, texture: 'paste_dispenser' })
 
@@ -42,6 +43,11 @@ class GameScene extends Phaser.Scene {
 
     this.physics.add.overlap(this.followers, this.followers, this.onFollowerOverlap)
     this.physics.add.overlap(
+      this.player.callZone,
+      this.followers,
+      this.onCallZoneFollowerOverlap
+    )
+    this.physics.add.overlap(
       this.player,
       [this.building],
       this.onPlayerBuildingOverlap
@@ -59,6 +65,15 @@ class GameScene extends Phaser.Scene {
   onFollowerOverlap (follower, followerB) {
     follower.avoid(followerB)
     followerB.avoid(follower)
+  }
+
+  onCallZoneFollowerOverlap (callZone, follower) {
+    const player = callZone.player
+
+    if (follower.target !== player && player.controls.action.isDown) {
+      follower.setTarget(player)
+      player.addFollower(follower)
+    }
   }
 }
 

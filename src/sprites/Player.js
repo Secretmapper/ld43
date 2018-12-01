@@ -5,12 +5,22 @@ class Player extends Phaser.GameObjects.Sprite {
     super(config.scene, config.x, config.y, 'player')
     config.scene.physics.world.enable(this)
 
+    this.callZone = config.scene.add.sprite(config.scene, this.x, this.y)
+    config.scene.physics.world.enable(this.callZone)
+    this.callZone.body.setCircle(25, 25, true)
+    this.callZone.body.moves = false
+    this.callZone.setVisible(false)
+    this.callZone.player = this
+
     this.followers = []
     this.controls = config.controls
   }
 
   update () {
-    const { cursors, action } = this.controls
+    this.callZone.x = this.x - this.callZone.body.radius - this.width / 2
+    this.callZone.y = this.y - this.callZone.body.radius + this.height
+
+    const { cursors, action, cancel } = this.controls
 
     this.body.setVelocity(0)
 
@@ -37,12 +47,17 @@ class Player extends Phaser.GameObjects.Sprite {
         this.followers.map(follower => {
           follower.setTarget(this.hoveredBuilding)
         })
-      } else {
-        this.followers.map(follower => {
-          follower.setTarget(null)
-        })
       }
     }
+
+    if (cancel.isDown) {
+      this.followers.map(follower => {
+        follower.setTarget(null)
+      })
+      this.followers.length = 0
+    }
+
+    this.hoveredBuilding = undefined
   }
 
   addFollower (follower) {
