@@ -2,6 +2,7 @@ const MAX_SPEED = 80
 const MAX_FORCE = 160
 const MAX_SPEED_VECTOR = new Phaser.Math.Vector2(MAX_SPEED)
 const MAX_FORCE_VECTOR = new Phaser.Math.Vector2(MAX_FORCE)
+const FORCE_FORCE_VECTOR = new Phaser.Math.Vector2(320)
 const MAX_WANDER_VECTOR = new Phaser.Math.Vector2(20)
 const MAX_SPEED_SQ = MAX_SPEED * MAX_SPEED
 const MAX_FORCE_SQ = MAX_FORCE * MAX_FORCE
@@ -87,6 +88,7 @@ class Follower extends Phaser.GameObjects.Sprite {
     const entity = this
 
     const steeringForce = this.seek(entity, target).negate()
+      .normalize().multiply(FORCE_FORCE_VECTOR)
     entity.body.velocity.add(steeringForce)
   }
 }

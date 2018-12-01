@@ -33,7 +33,7 @@ class GameScene extends Phaser.Scene {
     this.buildings = this.add.group({ runChildUpdate: true })
     this.buildings.classType = Building
     for (let i = 0; i < 10; i++) {
-      addToGroupAndKill(this.buildings, new Building({ scene: this, x: 0, y: 0 }))
+      addToGroupAndKill(this.buildings, new Building({ scene: this, x: 0, y: 0, texture: 'paste_dispenser' }))
     }
     const b = this.buildings.get(600, 50)
     b.resetAs(Building.PASTE_DISPENSER )
@@ -151,6 +151,8 @@ class GameScene extends Phaser.Scene {
   onFollowerBuildingOverlap (follower, building) {
     if (follower.target === building && building._approaching === follower) {
       building.takeFollower(follower)
+    } else {
+      follower.avoid(building)
     }
   }
 
@@ -168,7 +170,7 @@ class GameScene extends Phaser.Scene {
       this.onPlayerPackagesOverlap,
       this.bothActive
     )
-    this.physics.add.overlap(
+    this.physics.add.collider(
       this.player,
       this.buildings,
       this.onPlayerBuildingOverlap,
