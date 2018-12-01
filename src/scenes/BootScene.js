@@ -23,6 +23,8 @@ class BootScene extends Phaser.Scene {
       progress.destroy()
       this.scene.start('TitleScene')
     })
+
+    this.load.image('player', 'assets/images/player.png')
   }
 }
 
