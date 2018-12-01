@@ -10,6 +10,8 @@ class ShoppingList {
     }
     this.toShow = false
     this.showing = false
+
+    this._pressedAction = false
   }
 
   show () {
@@ -50,7 +52,7 @@ class ShoppingList {
         this.data.curIdx = Math.max(0, this.data.curIdx++)
       } else if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
         this.data.curIdx = Math.max(0, this.data.curIdx--)
-      } else if (Phaser.Input.Keyboard.JustDown(action)) {
+      } else if (action.isDown && !this._pressedAction) {
         // buy
         this.scene.buyItem()
         this.hide()
@@ -59,6 +61,7 @@ class ShoppingList {
       }
     }
 
+    this._pressedAction = action.isDown
     this.cursor.y = (this.data.curIdx + 1) * (this.tileBounds.height)
   }
 

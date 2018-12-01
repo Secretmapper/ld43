@@ -14,7 +14,9 @@ class Player extends Phaser.GameObjects.Sprite {
     this.callZone.player = this
 
     this.followers = []
+    this.carrying = null
     this.controls = config.controls
+    this._pressedAction = false
   }
 
   update () {
@@ -43,36 +45,62 @@ class Player extends Phaser.GameObjects.Sprite {
       this.body.setVelocityY(0)
     }
 
+    if (this.carrying) {
+      this.carrying.x = this.x + this.carrying.width / 2
+      this.carrying.y = this.y + this.carrying.height / 2
+    }
+
     if (action.isDown) {
-      if (this.hoveredBuilding instanceof Table) {
-        if (this.hoveredBuilding.canMake) {
-          this.scene.showShoppingList(this.hoveredBuilding)
+      if (!this._pressedAction) {
+        if (this.hoveredBuilding instanceof Table) {
+          if (this.hoveredBuilding.canMake) {
+            this.scene.showShoppingList(this.hoveredBuilding)
+          }
+        }
+
+        if (
+          this.hoveredBuilding && !this.hoveredBuilding.isFilled
+          && this.followers.length > 0
+        ) {
+          const follower = this.followers.pop()
+
+          this.hoveredBuilding.approachedBy(follower)
+          follower.setTarget(this.hoveredBuilding)
         }
       }
 
-      if (
-        this.hoveredBuilding && !this.hoveredBuilding.isFilled
-        && this.followers.length > 0
-      ) {
-        const follower = this.followers.pop()
-
-        this.hoveredBuilding.approachedBy(follower)
-        follower.setTarget(this.hoveredBuilding)
+      if (this.carrying) {
+        this.carrying = null
       }
     }
 
+    this._pressedAction = action.isDown
+
     if (cancel.isDown) {
-      this.followers.map(follower => {
-        follower.setTarget(null)
-      })
-      this.followers.length = 0
+      this.clearFollowers()
     }
 
     this.hoveredBuilding = undefined
   }
 
+  carry (itemPackage) {
+    if (!this.carrying) {
+      this.carrying = itemPackage
+      this.clearFollowers()
+    }
+  }
+
   addFollower (follower) {
-    this.followers.push(follower)
+    if (!this.carrying) {
+      this.followers.push(follower)
+    }
+  }
+
+  clearFollowers () {
+    this.followers.map(follower => {
+      follower.setTarget(null)
+    })
+    this.followers.length = 0
   }
 
   setHoveredBuilding (building) {

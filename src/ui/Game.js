@@ -19,6 +19,14 @@ class GameUI {
     )
 
     this.shoppingList = new ShoppingList(scene, controls)
+
+    this.spots = {
+      paste_dispenser: scene.physics.add.group({ key: 'paste_dispenser', repeat: 5, setXY: { x: 600, y: 50, stepY: 80 } }),
+    }
+    this.spots.paste_dispenser.getChildren().map(c => c.setDepth(-1))
+
+    this.spots.all = scene.physics.add.group()
+      .addMultiple(this.spots.paste_dispenser.getChildren())
   }
 
   update () {

@@ -33,14 +33,15 @@ class Table extends Building {
   }
 
   update (time, delta) {
+    const TIME = 500
     if (this.hasUser && this.making) {
       this.elapsed += delta
 
-      if (this.elapsed >= 5000) {
+      if (this.elapsed >= TIME) {
         this.scene.addScience(this.getTickScore(), this)
         this.scene.deliver(this, this.making)
 
-        this.elapsed -= 5000
+        this.elapsed -= TIME
         this.making = null
       }
     }

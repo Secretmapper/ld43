@@ -2,6 +2,7 @@ import Player from 'sprites/Player'
 import Follower from 'sprites/Follower'
 import Building from 'sprites/Building'
 import Table from 'sprites/Table'
+import Package from 'sprites/Package'
 import GameUI from 'ui/Game'
 
 class GameScene extends Phaser.Scene {
@@ -25,16 +26,17 @@ class GameScene extends Phaser.Scene {
     this.player = new Player({
       scene: this,
       controls,
-      x: 200,
+      x: 400,
       y: 300,
     })
+    this.packages = this.add.group({ runChildUpdate: true })
     this.buildings = this.add.group({ runChildUpdate: true })
     this.buildings.classType = Building
     for (let i = 0; i < 10; i++) {
       addToGroupAndKill(this.buildings, new Building({ scene: this, x: 0, y: 0 }))
     }
-    const b = this.buildings.get(600, 100)
-    b.resetAs(Building.PASTE_DISPENSER)
+    const b = this.buildings.get(600, 50)
+    b.resetAs(Building.PASTE_DISPENSER )
 
     const t = new Table({ scene: this, x: 200, y: 400 })
     this.buildings.add(t, true)
@@ -55,10 +57,10 @@ class GameScene extends Phaser.Scene {
 
     this.add.existing(this.player)
 
-    this.addOverlapCollisionListeners()
-
     this.ui = new GameUI(this)
     this.ui.create(this, controls)
+
+    this.addOverlapCollisionListeners()
   }
 
   update (time, delta) {
@@ -77,14 +79,11 @@ class GameScene extends Phaser.Scene {
 
   deliver (builder, made) {
     if (made === 'paste_dispenser') {
-      const b = new Building({
-        scene: this,
-        x: builder.x + builder.width + 8,
-        y: builder.y,
-        texture: 'paste_dispenser'
-      })
-      b.resetAs(Building.PASTE_DISPENSER)
-      this.buildings.add(b, true)
+      const x = builder.x + 32 + builder.width / 2
+      const item = new Package(this, x, builder.y, made)
+      item.setActive(true)
+      item.setVisible(true)
+      this.packages.add(item, true)
     }
   }
 
@@ -107,6 +106,26 @@ class GameScene extends Phaser.Scene {
     player.setHoveredBuilding(building)
   }
 
+  onPlayerPackagesOverlap (player, itemPackage) {
+    if (player.controls.action.isDown) {
+      player.carry(itemPackage)
+    }
+  }
+
+  onPackageSpotOverlap (item, spot) {
+    // TODO: this is hacky
+    if (
+      item.key === spot.texture.key
+      && !spot.taken
+      && this.player.carrying !== item
+    ) {
+      spot.taken = true
+      item.destroy()
+      const b = this.buildings.get(spot.x, spot.y)
+      b.resetAs(Building.PASTE_DISPENSER)
+    }
+  }
+
   onFollowerOverlap (follower, followerB) {
     if (follower.target === this.player || !follower.target) {
       follower.avoid(followerB)
@@ -118,8 +137,9 @@ class GameScene extends Phaser.Scene {
 
   onCallZoneFollowerOverlap (callZone, follower) {
     const player = callZone.player
+    const pressedAction = (Phaser.Input.Keyboard.JustDown(player.controls.action))
 
-    if (follower.target !== player && player.controls.action.isDown) {
+    if (follower.target !== player && pressedAction) {
       if (follower.target && follower.target.approachedBy) {
         follower.target.approachedBy(null)
       }
@@ -144,9 +164,22 @@ class GameScene extends Phaser.Scene {
     )
     this.physics.add.overlap(
       this.player,
+      this.packages,
+      this.onPlayerPackagesOverlap,
+      this.bothActive
+    )
+    this.physics.add.overlap(
+      this.player,
       this.buildings,
       this.onPlayerBuildingOverlap,
       this.bothActive
+    )
+    this.physics.add.overlap(
+      this.packages,
+      this.ui.spots.all,
+      this.onPackageSpotOverlap,
+      this.bothActive,
+      this
     )
     this.physics.add.overlap(
       this.followers,
