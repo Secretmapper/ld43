@@ -42,7 +42,7 @@ class GameScene extends Phaser.Scene {
 
     const t = new Table({ scene: this, x: 100, y: 400 })
     this.buildings.add(t, true)
-    this.buildings.add(new Hunt({ scene: this, x: 200, y: 50 }), true)
+    this.buildings.add(new Hunt({ scene: this, x: 100, y: 50 }), true)
     this.buildings.add(new Radar({ scene: this, x: 200, y: 550 }), true)
 
     this.followers = this.add.group({ runChildUpdate: true })
@@ -51,12 +51,10 @@ class GameScene extends Phaser.Scene {
     for (let i = 0; i < 25; i++) {
       const obj = new Follower({
         scene: this,
-        x: 250 + i,
-        y: 250 + i,
-        target: this.player
+        x: 250 + (i % 5) * 24,
+        y: 250 + (i / 5) * 24
       })
       this.followers.add(obj, true)
-      this.player.addFollower(obj)
     }
 
     this.add.existing(this.player)
@@ -134,12 +132,12 @@ class GameScene extends Phaser.Scene {
   }
 
   onFollowerOverlap (follower, followerB) {
-    if (follower.target === this.player || !follower.target) {
+    // if (follower.target === this.player || !follower.target) {
       follower.avoid(followerB)
-    }
-    if (follower.target === this.player || !followerB.target) {
+    // }
+    // if (follower.target === this.player || !followerB.target) {
       followerB.avoid(follower)
-    }
+    // }
   }
 
   onCallZoneFollowerOverlap (callZone, follower) {
