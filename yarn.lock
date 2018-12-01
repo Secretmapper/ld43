@@ -4267,7 +4267,14 @@ phaser-animated-tiles@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/phaser-animated-tiles/-/phaser-animated-tiles-2.0.2.tgz#541f9ec3790de92ba11c662049a7234d6dde2f53"
 
-phaser@^3.15.1:
+phaser3-nineslice@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/phaser3-nineslice/-/phaser3-nineslice-0.4.0.tgz#03c0d67708af23a1c47012760a0b76a76c41c264"
+  dependencies:
+    phaser "^3.13.0"
+    webpack-cli "^3.1.1"
+
+phaser@^3.13.0, phaser@^3.15.1:
   version "3.15.1"
   resolved "https://registry.yarnpkg.com/phaser/-/phaser-3.15.1.tgz#17d41fb5b310fb062952e29d9bb26a99c90d3a44"
   dependencies:
@@ -5638,7 +5645,7 @@ watchpack@^1.5.0:
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
 
-webpack-cli@^3.1.0:
+webpack-cli@^3.1.0, webpack-cli@^3.1.1:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-3.1.2.tgz#17d7e01b77f89f884a2bbf9db545f0f6a648e746"
   dependencies:

@@ -2,6 +2,7 @@ import 'phaser'
 import BootScene from './scenes/BootScene'
 import GameScene from './scenes/GameScene'
 import TitleScene from './scenes/TitleScene'
+import { Plugin as NineSlicePlugin } from 'phaser3-nineslice'
 
 const config = {
   // For more settings see <https://github.com/photonstorm/phaser/blob/master/src/boot/Config.js>
@@ -17,6 +18,9 @@ const config = {
     arcade: {
       debug: false
     }
+  },
+  plugins: {
+    global: [ NineSlicePlugin.DefaultCfg ],
   },
   scene: [BootScene, TitleScene, GameScene]
 }

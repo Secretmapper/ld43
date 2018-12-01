@@ -17,31 +17,12 @@ class GameUI {
       { font: '20px Arial', fill: 'white' }
     )
 
-    const tile = scene.add.sprite(
-      300,
-      100,
-      'tile'
-    )
-    scene.add.text(
-      tile.x + tile.width / 2 + 8,
-      tile.y - tile.height / 2 + 4,
-      'Nutrient Paste Dispenser',
-      { font: '18px Arial', fill: 'white' }
-    )
-
-    scene.add.text(
-      tile.x + tile.width / 2 + 8,
-      tile.y + 4,
-      'Turns biomaterial into food',
-      { font: '14px Arial', fill: 'white' }
-    )
+    this.shoppingList = this.createShoppingList()
+    this.shoppingList.y = 600
   }
 
   update (key, num) {
     this[key].setText(`${key}: ${num}`)
-  }
-
-  createShoppingList () {
   }
 
   addFloatText (x, y, message) {
@@ -58,6 +39,40 @@ class GameUI {
       onComplete: text.destroy,
       onCompleteScope: text
     })
+  }
+
+  createShoppingList () {
+    const { scene } = this
+    const container = scene.add.container(200, 50)
+    const dlg = scene.add.nineslice(
+      0, 0,
+      340, 240,
+      'tile',
+      18,
+    )
+
+    const tile = scene.add.nineslice(32, 18, 48, 48, 'tile', 18)
+    tile.setOrigin(0)
+    const tileBounds = tile.getBounds()
+
+    container.add([
+      dlg,
+      tile,
+      scene.add.text(
+        tileBounds.x + tileBounds.width + 4,
+        tileBounds.y + 4,
+        'Nutrient Paste Dispenser',
+        { font: '18px Arial', fill: 'white' }
+      ),
+      scene.add.text(
+        tileBounds.x + tileBounds.width + 4,
+        tileBounds.y + tileBounds.height / 2 + 4,
+        'Turns biomaterial into food',
+        { font: '14px Arial', fill: 'white' }
+      )
+    ])
+
+    return container
   }
 }
 
