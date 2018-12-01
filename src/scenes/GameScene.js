@@ -66,6 +66,28 @@ class GameScene extends Phaser.Scene {
     this.ui.update()
   }
 
+  showShoppingList (table) {
+    this.data.shop = table
+    this.ui.showShoppingList()
+  }
+
+  buyItem () {
+    this.data.shop.make('paste_dispenser')
+  }
+
+  deliver (builder, made) {
+    if (made === 'paste_dispenser') {
+      const b = new Building({
+        scene: this,
+        x: builder.x + builder.width + 8,
+        y: builder.y,
+        texture: 'paste_dispenser'
+      })
+      b.resetAs(Building.PASTE_DISPENSER)
+      this.buildings.add(b, true)
+    }
+  }
+
   addFood (amount) {
     this.data.food += amount
     this.ui.setText('food', this.data.food)

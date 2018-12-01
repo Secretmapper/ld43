@@ -12,7 +12,11 @@ class Table extends Building {
     this.making = null
   }
 
-  get isIdle () {
+  get canMake () {
+    return (this.hasUser && !this.making)
+  }
+
+  get hasUser () {
     return (this._follower && this._follower.active)
   }
 
@@ -24,13 +28,20 @@ class Table extends Building {
     return 5
   }
 
+  make (making) {
+    this.making = making
+  }
+
   update (time, delta) {
-    if (this._follower) {
+    if (this.hasUser && this.making) {
       this.elapsed += delta
+
       if (this.elapsed >= 5000) {
         this.scene.addScience(this.getTickScore(), this)
+        this.scene.deliver(this, this.making)
 
         this.elapsed -= 5000
+        this.making = null
       }
     }
   }

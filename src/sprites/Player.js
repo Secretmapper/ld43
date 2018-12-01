@@ -45,8 +45,8 @@ class Player extends Phaser.GameObjects.Sprite {
 
     if (action.isDown) {
       if (this.hoveredBuilding instanceof Table) {
-        if (this.hoveredBuilding.isIdle) {
-          this.scene.ui.showShoppingList()
+        if (this.hoveredBuilding.canMake) {
+          this.scene.showShoppingList(this.hoveredBuilding)
         }
       }
 

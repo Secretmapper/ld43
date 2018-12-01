@@ -52,6 +52,8 @@ class ShoppingList {
         this.data.curIdx = Math.max(0, this.data.curIdx--)
       } else if (Phaser.Input.Keyboard.JustDown(action)) {
         // buy
+        this.scene.buyItem()
+        this.hide()
       } else if (Phaser.Input.Keyboard.JustDown(cancel)) {
         this.hide()
       }
