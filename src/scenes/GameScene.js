@@ -21,7 +21,14 @@ class GameScene extends Phaser.Scene {
       x: 200,
       y: 50,
     })
-    this.building = new Building({ scene: this, x: 200, y: 300, texture: 'paste_dispenser' })
+    this.building = new Building({
+      scene: this,
+      x: 600,
+      y: 100,
+      texture: 'paste_dispenser'
+    })
+    this.buildings = this.add.group({ runChildUpdate: true })
+    this.buildings.classType = Building
 
     this.followers = this.add.group({ runChildUpdate: true })
     this.followers.classType = Follower
@@ -45,17 +52,30 @@ class GameScene extends Phaser.Scene {
     this.physics.add.overlap(
       this.player.callZone,
       this.followers,
-      this.onCallZoneFollowerOverlap
+      this.onCallZoneFollowerOverlap,
+      this.bothActive
     )
     this.physics.add.overlap(
       this.player,
       [this.building],
-      this.onPlayerBuildingOverlap
+      this.onPlayerBuildingOverlap,
+      this.bothActive
+    )
+    this.physics.add.overlap(
+      this.followers,
+      [this.building],
+      this.onFollowerBuildingOverlap,
+      this.bothActive,
+      this
     )
   }
 
   update (time, delta) {
     this.player.update()
+  }
+
+  bothActive (a, b) {
+    return a.active && b.active
   }
 
   onPlayerBuildingOverlap (player, building) {
@@ -73,6 +93,13 @@ class GameScene extends Phaser.Scene {
     if (follower.target !== player && player.controls.action.isDown) {
       follower.setTarget(player)
       player.addFollower(follower)
+    }
+  }
+
+  onFollowerBuildingOverlap (follower, building) {
+    if (!building.isFilled) {
+      this.followers.killAndHide(follower)
+      building.takeFollower(follower)
     }
   }
 }

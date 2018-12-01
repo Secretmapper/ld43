@@ -25,7 +25,7 @@ class Follower extends Phaser.GameObjects.Sprite {
     this.body.velocity.multiply(new Phaser.Math.Vector2(0.9))
 
     if (this.target) {
-      const steeringForce = this.seek(this, this.target, 400)
+      const steeringForce = this.seek(this, this.target, 100)
 
       // vector(current velocity) + vector(steering force)
       this.body.velocity.add(steeringForce)
