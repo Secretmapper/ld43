@@ -13,12 +13,20 @@ class Follower extends Phaser.GameObjects.Sprite {
     this.target = config.target
   }
 
-  update () {
-    this.seek(this, this.target, 400)
-  }
-
   setTarget (target) {
     this.target = target
+  }
+
+  update () {
+    const steeringForce = this.seek(this, this.target, 400)
+
+    // vector(current velocity) + vector(steering force)
+    this.body.velocity.add(steeringForce)
+
+    // limit the magnitude of vector(new velocity) to maximum speed
+    if (this.body.velocity.lengthSq() > MAX_SPEED_SQ){
+      this.body.velocity.normalize().multiply(MAX_SPEED_VECTOR)
+    }
   }
 
   seek (entity, target, spaceSq) {
@@ -30,8 +38,7 @@ class Follower extends Phaser.GameObjects.Sprite {
     )
 
     if (distance < spaceSq) {
-      entity.body.velocity.set(0)
-      return
+      return entity.body.velocity.clone().negate()
     }
 
     // (target position) - (curr position) 
@@ -52,13 +59,14 @@ class Follower extends Phaser.GameObjects.Sprite {
       steeringForce.normalize().multiply(MAX_FORCE_VECTOR)
     }
 
-    // vector(current velocity) + vector(steering force)
-    entity.body.velocity.add(steeringForce)
+    return steeringForce
+  }
 
-    // limit the magnitude of vector(new velocity) to maximum speed
-    if (entity.body.velocity.lengthSq() > MAX_SPEED_SQ){
-      entity.body.velocity.normalize().multiply(MAX_SPEED_VECTOR)
-    }
+  avoid (target) {
+    const entity = this
+
+    const steeringForce = this.seek(entity, target).negate()
+    entity.body.velocity.add(steeringForce)
   }
 }
 

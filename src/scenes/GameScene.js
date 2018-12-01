@@ -25,11 +25,11 @@ class GameScene extends Phaser.Scene {
     this.followers = this.add.group({ runChildUpdate: true })
     this.followers.classType = Follower
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 25; i++) {
       const obj = new Follower({
         scene: this,
-        x: 250,
-        y: 250,
+        x: 250 + i,
+        y: 250 + i,
         target: this.player
       })
       this.followers.add(obj, true)
@@ -40,6 +40,7 @@ class GameScene extends Phaser.Scene {
     this.add.existing(this.player)
     this.add.existing(this.building)
 
+    this.physics.add.overlap(this.followers, this.followers, this.onFollowerOverlap)
     this.physics.add.overlap(
       this.player,
       [this.building],
@@ -53,6 +54,11 @@ class GameScene extends Phaser.Scene {
 
   onPlayerBuildingOverlap (player, building) {
     player.setHoveredBuilding(building)
+  }
+
+  onFollowerOverlap (follower, followerB) {
+    follower.avoid(followerB)
+    followerB.avoid(follower)
   }
 }
 
