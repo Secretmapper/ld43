@@ -2,6 +2,7 @@ const MAX_SPEED = 80
 const MAX_FORCE = 160
 const MAX_SPEED_VECTOR = new Phaser.Math.Vector2(MAX_SPEED)
 const MAX_FORCE_VECTOR = new Phaser.Math.Vector2(MAX_FORCE)
+const MAX_WANDER_VECTOR = new Phaser.Math.Vector2(20)
 const MAX_SPEED_SQ = MAX_SPEED * MAX_SPEED
 const MAX_FORCE_SQ = MAX_FORCE * MAX_FORCE
 
@@ -14,18 +15,29 @@ class Follower extends Phaser.GameObjects.Sprite {
   }
 
   setTarget (target) {
+    if (!target) {
+      this.body.setVelocity(0)
+    }
     this.target = target
   }
 
   update () {
-    const steeringForce = this.seek(this, this.target, 400)
+    this.body.velocity.multiply(new Phaser.Math.Vector2(0.9))
 
-    // vector(current velocity) + vector(steering force)
-    this.body.velocity.add(steeringForce)
+    if (this.target) {
+      const steeringForce = this.seek(this, this.target, 400)
 
-    // limit the magnitude of vector(new velocity) to maximum speed
-    if (this.body.velocity.lengthSq() > MAX_SPEED_SQ){
-      this.body.velocity.normalize().multiply(MAX_SPEED_VECTOR)
+      // vector(current velocity) + vector(steering force)
+      this.body.velocity.add(steeringForce)
+
+      // limit the magnitude of vector(new velocity) to maximum speed
+      if (this.body.velocity.lengthSq() > MAX_SPEED_SQ){
+        this.body.velocity.normalize().multiply(MAX_SPEED_VECTOR)
+      }
+    } else {
+      if (this.body.velocity.lengthSq() > 20 * 20){
+        this.body.velocity.normalize().multiply(MAX_WANDER_VECTOR)
+      }
     }
   }
 

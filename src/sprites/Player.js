@@ -37,6 +37,10 @@ class Player extends Phaser.GameObjects.Sprite {
         this.followers.map(follower => {
           follower.setTarget(this.hoveredBuilding)
         })
+      } else {
+        this.followers.map(follower => {
+          follower.setTarget(null)
+        })
       }
     }
   }
