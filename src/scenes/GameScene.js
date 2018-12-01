@@ -27,6 +27,14 @@ class GameScene extends Phaser.Scene {
       y: 100,
       texture: 'paste_dispenser'
     })
+    this.add.existing(
+      new Building({
+        scene: this,
+        x: 100,
+        y: 550,
+        texture: 'table'
+      })
+    )
     this.buildings = this.add.group({ runChildUpdate: true })
     this.buildings.classType = Building
 
