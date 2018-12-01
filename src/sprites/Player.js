@@ -68,8 +68,9 @@ class Player extends Phaser.GameObjects.Sprite {
           follower.setTarget(this.hoveredBuilding)
         }
       }
-
+    } else {
       if (this.carrying) {
+        this.scene.hideSpots(this.carrying)
         this.carrying = null
       }
     }
@@ -86,6 +87,7 @@ class Player extends Phaser.GameObjects.Sprite {
   carry (itemPackage) {
     if (!this.carrying) {
       this.carrying = itemPackage
+      this.scene.showSpots(this.carrying)
       this.clearFollowers()
     }
   }

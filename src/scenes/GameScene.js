@@ -43,7 +43,7 @@ class GameScene extends Phaser.Scene {
     const t = new Table({ scene: this, x: 100, y: 400 })
     this.buildings.add(t, true)
     this.buildings.add(new Hunt({ scene: this, x: 100, y: 50 }), true)
-    this.buildings.add(new Radar({ scene: this, x: 200, y: 550 }), true)
+    this.buildings.add(new Radar({ scene: this, x: 300, y: 550 }), true)
 
     this.followers = this.add.group({ runChildUpdate: true })
     this.followers.classType = Follower
@@ -92,6 +92,14 @@ class GameScene extends Phaser.Scene {
     }
   }
 
+  showSpots (carrying) {
+    this.ui.showSpots(carrying.key)
+  }
+
+  hideSpots (carrying) {
+    this.ui.hideSpots(carrying.key)
+  }
+
   addFood (amount) {
     this.data.food += amount
     this.ui.setText('food', this.data.food)
@@ -101,6 +109,10 @@ class GameScene extends Phaser.Scene {
     this.data.science += amount
     this.ui.setText('science', this.data.science)
     this.ui.addFloatText(building.x, building.y, `+${amount}`)
+  }
+
+  makeContact (building) {
+    this.ui.addFloatText(building.x, building.y, `+${10}`)
   }
 
   bothActive (a, b) {

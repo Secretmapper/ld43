@@ -6,6 +6,16 @@ class Radar extends Building {
     config.scene.physics.world.enable(this)
 
     this.body.setImmovable(true)
+    this.timedEvent = config.scene.time.addEvent({
+      delay: 1000,
+      callback: this.onLoop,
+      callbackScope: this,
+      loop: true
+    })
+}
+
+  onLoop (time, delta) {
+    this.scene.makeContact(this)
   }
 }
 

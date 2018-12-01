@@ -22,20 +22,37 @@ class GameUI {
 
     this.spots = {
       paste_dispenser: scene.physics.add.group({ key: 'paste_dispenser', repeat: 5, setXY: { x: 600, y: 50, stepY: 80 } }),
-      radar: scene.physics.add.group({ key: 'radar', repeat: 5, setXY: { x: 200, y: 550, stepX: 80 } }),
+      radar: scene.physics.add.group({ key: 'radar', repeat: 3, setXY: { x: 300, y: 550, stepX: 80 } }),
       hunt: scene.physics.add.group({ key: 'hunt', repeat: 3, setXY: { x: 100, y: 50, stepX: 100 } }),
+      table: scene.physics.add.group({ key: 'table', repeat: 3, setXY: { x: 100, y: 400, stepY: 50 } }),
     }
 
     this.spots.all = scene.physics.add.group()
       .addMultiple(this.spots.paste_dispenser.getChildren())
       .addMultiple(this.spots.radar.getChildren())
       .addMultiple(this.spots.hunt.getChildren())
+      .addMultiple(this.spots.table.getChildren())
 
-    this.spots.all.getChildren().map(c => c.setDepth(-1))
+    this.spots.all.getChildren().map(c => {
+      c.setVisible(false)
+      c.setDepth(-1)
+    })
   }
 
   update () {
     this.shoppingList.update()
+  }
+
+  showSpots (key) {
+    this.spots[key].getChildren().map(
+      c => c.setVisible(true)
+    )
+  }
+
+  hideSpots (key) {
+    this.spots[key].getChildren().map(
+      c => c.setVisible(false)
+    )
   }
 
   setText(key, num) {
