@@ -10,6 +10,19 @@ class Table extends Building {
     this._follower = null
     this.elapsed = 0
     this.making = null
+
+    this.bubble = this.scene.add.sprite(config.x + this.width, config.y, 'bubble')
+    this.bubble.setDepth(99999)
+    this.bubble.setOrigin(1)
+    this.scene.add.tween({
+      targets: this.bubble,
+      y: this.bubble.y - 5,
+      loop: -1,
+      repeat: true,
+      yoyo: true,
+      duration: 500,
+      ease: 'Linear'
+    })
   }
 
   get canMake () {
@@ -34,6 +47,9 @@ class Table extends Building {
 
   update (time, delta) {
     const TIME = 500
+
+    this.bubble.setVisible(this.canMake)
+
     if (this.hasUser && this.making) {
       this.elapsed += delta
 
@@ -48,7 +64,7 @@ class Table extends Building {
   }
 
   takeFollower (follower) {
-    const x = this.x - this.width / 2
+    const x = this.x + this.width / 2
     const y = this.y
 
     follower.x = x

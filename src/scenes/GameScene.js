@@ -2,6 +2,8 @@ import Player from 'sprites/Player'
 import Follower from 'sprites/Follower'
 import Building from 'sprites/Building'
 import Table from 'sprites/Table'
+import Hunt from 'sprites/Hunt'
+import Radar from 'sprites/Radar'
 import Package from 'sprites/Package'
 import GameUI from 'ui/Game'
 
@@ -38,8 +40,10 @@ class GameScene extends Phaser.Scene {
     const b = this.buildings.get(600, 50)
     b.resetAs(Building.PASTE_DISPENSER )
 
-    const t = new Table({ scene: this, x: 200, y: 400 })
+    const t = new Table({ scene: this, x: 100, y: 400 })
     this.buildings.add(t, true)
+    this.buildings.add(new Hunt({ scene: this, x: 200, y: 50 }), true)
+    this.buildings.add(new Radar({ scene: this, x: 200, y: 550 }), true)
 
     this.followers = this.add.group({ runChildUpdate: true })
     this.followers.classType = Follower
@@ -61,11 +65,14 @@ class GameScene extends Phaser.Scene {
     this.ui.create(this, controls)
 
     this.addOverlapCollisionListeners()
+    this._pressedAction = false
   }
 
   update (time, delta) {
     this.player.update()
     this.ui.update()
+    this._pressedAction = this.player.controls.action.isDown
+    this._alreadyCalled = false
   }
 
   showShoppingList (table) {
@@ -79,7 +86,7 @@ class GameScene extends Phaser.Scene {
 
   deliver (builder, made) {
     if (made === 'paste_dispenser') {
-      const x = builder.x + 32 + builder.width / 2
+      const x = builder.x - (32 + builder.width / 2)
       const item = new Package(this, x, builder.y, made)
       item.setActive(true)
       item.setVisible(true)
@@ -137,12 +144,14 @@ class GameScene extends Phaser.Scene {
 
   onCallZoneFollowerOverlap (callZone, follower) {
     const player = callZone.player
-    const pressedAction = (Phaser.Input.Keyboard.JustDown(player.controls.action))
 
-    if (follower.target !== player && pressedAction) {
+    const pressedAction = (player.controls.action.isDown && !this._pressedAction)
+
+    if (!this._alreadyCalled && !player.carrying && follower.target !== player && pressedAction) {
       if (follower.target && follower.target.approachedBy) {
         follower.target.approachedBy(null)
       }
+      this._alreadyCalled = true
       follower.setTarget(player)
       player.addFollower(follower)
     }
@@ -162,7 +171,8 @@ class GameScene extends Phaser.Scene {
       this.player.callZone,
       this.followers,
       this.onCallZoneFollowerOverlap,
-      this.bothActive
+      this.bothActive,
+      this
     )
     this.physics.add.overlap(
       this.player,

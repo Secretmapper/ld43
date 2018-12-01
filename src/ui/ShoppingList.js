@@ -75,9 +75,7 @@ class ShoppingList {
       18,
     )
 
-    const tile = scene.add.nineslice(32, 18, 48, 48, 'tile', 18)
-    tile.setOrigin(0)
-    const tileBounds = tile.getBounds()
+    const tileBounds = scene.make.nineslice(32, 18, 48, 48, 'tile', 18).getBounds()
 
     const cursor = scene.add.sprite(
       tileBounds.x - 18,
@@ -96,19 +94,17 @@ class ShoppingList {
 
     container.add([
       dlg,
-      tile,
       cursor,
-      scene.add.text(
-        tileBounds.x + tileBounds.width + 4,
-        tileBounds.y + 4,
+      ...this.makeRow(
+        tileBounds,
         'Nutrient Paste Dispenser',
-        { font: '18px Arial', fill: 'white' }
+        'Turns biomaterial into food'
       ),
-      scene.add.text(
-        tileBounds.x + tileBounds.width + 4,
-        tileBounds.y + tileBounds.height / 2 + 4,
-        'Turns biomaterial into food',
-        { font: '14px Arial', fill: 'white' }
+      ...this.makeRow(
+        tileBounds,
+        'Workbench',
+        'Allows humans to craft/research',
+        1
       )
     ])
 
@@ -117,6 +113,32 @@ class ShoppingList {
     this.tileBounds = tileBounds
     this.cursor = cursor
     this.container = container
+  }
+
+  makeRow (tileBounds, title, desc, i = 0) {
+    const scene = this.scene
+    const tile = scene.add.nineslice(
+      32, 18 + ((tileBounds.height + 4) * i),
+      48, 48,
+      'tile', 18
+    )
+    tile.setOrigin(0)
+
+    return [
+      tile,
+      scene.add.text(
+        tile.x + tileBounds.width + 4,
+        tile.y + 4,
+        title,
+        { font: '18px Arial', fill: 'white' }
+      ),
+      scene.add.text(
+        tile.x + tileBounds.width + 4,
+        tile.y + tileBounds.height / 2 + 4,
+        desc,
+        { font: '14px Arial', fill: 'white' }
+      )
+    ]
   }
 }
 
