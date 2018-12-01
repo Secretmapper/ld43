@@ -17,6 +17,10 @@ class Follower extends Phaser.GameObjects.Sprite {
     this.seek(this, this.target, 400)
   }
 
+  setTarget (target) {
+    this.target = target
+  }
+
   seek (entity, target, spaceSq) {
     const distance = Phaser.Math.Distance.Squared(
       target.body.position.x,

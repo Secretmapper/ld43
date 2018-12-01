@@ -5,11 +5,12 @@ class Player extends Phaser.GameObjects.Sprite {
     super(config.scene, config.x, config.y, 'player')
     config.scene.physics.world.enable(this)
 
-    this.cursors = config.cursors
+    this.followers = []
+    this.controls = config.controls
   }
 
   update () {
-    const { cursors } = this
+    const { cursors, action } = this.controls
 
     this.body.setVelocity(0)
 
@@ -30,6 +31,22 @@ class Player extends Phaser.GameObjects.Sprite {
     } else {
       this.body.setVelocityY(0)
     }
+
+    if (action.isDown) {
+      if (this.hoveredBuilding) {
+        this.followers.map(follower => {
+          follower.setTarget(this.hoveredBuilding)
+        })
+      }
+    }
+  }
+
+  addFollower (follower) {
+    this.followers.push(follower)
+  }
+
+  setHoveredBuilding (building) {
+    this.hoveredBuilding = building
   }
 }
 

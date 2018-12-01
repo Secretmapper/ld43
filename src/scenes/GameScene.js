@@ -1,5 +1,6 @@
 import Player from 'sprites/Player'
 import Follower from 'sprites/Follower'
+import Building from 'sprites/Building'
 
 class GameScene extends Phaser.Scene {
   constructor () {
@@ -10,8 +11,16 @@ class GameScene extends Phaser.Scene {
   preload () {}
 
   create () {
-    this.cursors = this.input.keyboard.createCursorKeys()
-    this.player = new Player({ scene: this, x: 200, y: 50, cursors: this.cursors })
+    this.player = new Player({
+      scene: this,
+      x: 200,
+      y: 50,
+      controls: {
+        action: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+        cursors: this.input.keyboard.createCursorKeys()
+      }
+    })
+    this.building = new Building({ scene: this, x: 200, y: 300, texture: 'paste_dispenser' })
 
     this.followers = this.add.group({ runChildUpdate: true })
     this.followers.classType = Follower
@@ -25,13 +34,25 @@ class GameScene extends Phaser.Scene {
       })
       this.followers.add(obj, true)
       // obj.kill()
+      this.player.addFollower(obj)
     }
 
     this.add.existing(this.player)
+    this.add.existing(this.building)
+
+    this.physics.add.overlap(
+      this.player,
+      [this.building],
+      this.onPlayerBuildingOverlap
+    )
   }
 
   update (time, delta) {
     this.player.update()
+  }
+
+  onPlayerBuildingOverlap (player, building) {
+    player.setHoveredBuilding(building)
   }
 }
 
