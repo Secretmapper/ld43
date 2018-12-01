@@ -1,5 +1,6 @@
+import ShoppingList from 'ui/ShoppingList'
 class GameUI {
-  create (scene) {
+  create (scene, controls) {
     this.scene = scene
     const { width, height } = this.scene.sys.canvas
 
@@ -17,11 +18,14 @@ class GameUI {
       { font: '20px Arial', fill: 'white' }
     )
 
-    this.shoppingList = this.createShoppingList()
-    this.shoppingList.y = 600
+    this.shoppingList = new ShoppingList(scene, controls)
   }
 
-  update (key, num) {
+  update () {
+    this.shoppingList.update()
+  }
+
+  setText(key, num) {
     this[key].setText(`${key}: ${num}`)
   }
 
@@ -41,38 +45,8 @@ class GameUI {
     })
   }
 
-  createShoppingList () {
-    const { scene } = this
-    const container = scene.add.container(200, 50)
-    const dlg = scene.add.nineslice(
-      0, 0,
-      340, 240,
-      'tile',
-      18,
-    )
-
-    const tile = scene.add.nineslice(32, 18, 48, 48, 'tile', 18)
-    tile.setOrigin(0)
-    const tileBounds = tile.getBounds()
-
-    container.add([
-      dlg,
-      tile,
-      scene.add.text(
-        tileBounds.x + tileBounds.width + 4,
-        tileBounds.y + 4,
-        'Nutrient Paste Dispenser',
-        { font: '18px Arial', fill: 'white' }
-      ),
-      scene.add.text(
-        tileBounds.x + tileBounds.width + 4,
-        tileBounds.y + tileBounds.height / 2 + 4,
-        'Turns biomaterial into food',
-        { font: '14px Arial', fill: 'white' }
-      )
-    ])
-
-    return container
+  showShoppingList () {
+    this.shoppingList.show()
   }
 }
 

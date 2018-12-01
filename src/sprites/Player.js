@@ -1,3 +1,4 @@
+import Table from 'sprites/Table'
 const SPEED = 160
 
 class Player extends Phaser.GameObjects.Sprite {
@@ -43,6 +44,12 @@ class Player extends Phaser.GameObjects.Sprite {
     }
 
     if (action.isDown) {
+      if (this.hoveredBuilding instanceof Table) {
+        if (this.hoveredBuilding.isIdle) {
+          this.scene.ui.showShoppingList()
+        }
+      }
+
       if (
         this.hoveredBuilding && !this.hoveredBuilding.isFilled
         && this.followers.length > 0

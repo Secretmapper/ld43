@@ -9,6 +9,11 @@ class Table extends Building {
     this._approaching = null
     this._follower = null
     this.elapsed = 0
+    this.making = null
+  }
+
+  get isIdle () {
+    return (this._follower && this._follower.active)
   }
 
   get isFilled () {

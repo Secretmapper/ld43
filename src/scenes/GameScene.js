@@ -17,15 +17,16 @@ class GameScene extends Phaser.Scene {
       science: 0
     }
     this.sprites = {}
+    const controls = {
+      action: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+      cancel: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
+      cursors: this.input.keyboard.createCursorKeys()
+    }
     this.player = new Player({
       scene: this,
-      controls: {
-        action: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
-        cancel: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
-        cursors: this.input.keyboard.createCursorKeys()
-      },
+      controls,
       x: 200,
-      y: 50,
+      y: 300,
     })
     this.buildings = this.add.group({ runChildUpdate: true })
     this.buildings.classType = Building
@@ -57,21 +58,22 @@ class GameScene extends Phaser.Scene {
     this.addOverlapCollisionListeners()
 
     this.ui = new GameUI(this)
-    this.ui.create(this)
+    this.ui.create(this, controls)
   }
 
   update (time, delta) {
     this.player.update()
+    this.ui.update()
   }
 
   addFood (amount) {
     this.data.food += amount
-    this.ui.update('food', this.data.food)
+    this.ui.setText('food', this.data.food)
   }
 
   addScience (amount, building) {
     this.data.science += amount
-    this.ui.update('science', this.data.science)
+    this.ui.setText('science', this.data.science)
     this.ui.addFloatText(building.x, building.y, `+${amount}`)
   }
 
