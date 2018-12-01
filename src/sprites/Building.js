@@ -30,6 +30,20 @@ class Building extends Phaser.GameObjects.Sprite {
   onFinishTakingFollower (tween, target) {
     this._isFilled = false
   }
+
+  resetAs (type) {
+    this.setTexture(type.texture)
+    this.setActive(true)
+    this.setVisible(true)
+  }
+}
+
+Building.TABLE = {
+  texture: 'table'
+}
+
+Building.PASTE_DISPENSER = {
+  texture: 'paste_dispenser'
 }
 
 export default Building

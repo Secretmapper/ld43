@@ -21,22 +21,15 @@ class GameScene extends Phaser.Scene {
       x: 200,
       y: 50,
     })
-    this.building = new Building({
-      scene: this,
-      x: 600,
-      y: 100,
-      texture: 'paste_dispenser'
-    })
-    this.add.existing(
-      new Building({
-        scene: this,
-        x: 100,
-        y: 550,
-        texture: 'table'
-      })
-    )
     this.buildings = this.add.group({ runChildUpdate: true })
     this.buildings.classType = Building
+    for (let i = 0; i < 10; i++) {
+      addToGroupAndKill(this.buildings, new Building({ scene: this, x: 0, y: 0 }))
+    }
+    const b = this.buildings.get(600, 100)
+    b.resetAs(Building.PASTE_DISPENSER)
+    const t = this.buildings.get(200, 400)
+    t.resetAs(Building.TABLE)
 
     this.followers = this.add.group({ runChildUpdate: true })
     this.followers.classType = Follower
@@ -49,12 +42,10 @@ class GameScene extends Phaser.Scene {
         target: this.player
       })
       this.followers.add(obj, true)
-      // obj.kill()
       this.player.addFollower(obj)
     }
 
     this.add.existing(this.player)
-    this.add.existing(this.building)
 
     this.physics.add.overlap(this.followers, this.followers, this.onFollowerOverlap)
     this.physics.add.overlap(
@@ -65,13 +56,13 @@ class GameScene extends Phaser.Scene {
     )
     this.physics.add.overlap(
       this.player,
-      [this.building],
+      this.buildings,
       this.onPlayerBuildingOverlap,
       this.bothActive
     )
     this.physics.add.overlap(
       this.followers,
-      [this.building],
+      this.buildings,
       this.onFollowerBuildingOverlap,
       this.bothActive,
       this
@@ -110,6 +101,11 @@ class GameScene extends Phaser.Scene {
       building.takeFollower(follower)
     }
   }
+}
+
+const addToGroupAndKill = (group, obj) => {
+  group.add(obj, true)
+  group.killAndHide(obj)
 }
 
 export default GameScene
