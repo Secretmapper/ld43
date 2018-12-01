@@ -69,9 +69,14 @@ class Table extends Building {
 
     follower.x = x
     follower.y = y 
-    follower.taken({x, y})
+    follower.taken(this, {x, y})
 
     this._follower = follower
+  }
+
+  untakeFollower (follower) {
+    this._follower = null
+    this._approaching = null
   }
 }
 

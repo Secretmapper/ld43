@@ -162,6 +162,7 @@ class GameScene extends Phaser.Scene {
         follower.target.approachedBy(null)
       }
       this._alreadyCalled = true
+      follower.untake()
       follower.setTarget(player)
       player.addFollower(follower)
     }
