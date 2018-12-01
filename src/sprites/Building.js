@@ -14,6 +14,8 @@ class Building extends Phaser.GameObjects.Sprite {
   takeFollower (follower) {
     if (!this.isFilled) {
       this._isFilled = true
+      follower.setActive(false)
+      follower.setVisible(false)
       this.scene.tweens.add({
         targets: this,
         y: this.y + 5,

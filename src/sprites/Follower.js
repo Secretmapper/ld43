@@ -21,8 +21,16 @@ class Follower extends Phaser.GameObjects.Sprite {
     this.target = target
   }
 
+  taken () {
+    this._taken = true
+    this.body.setVelocity(0)
+    this.body.setImmovable(true)
+  }
+
   update () {
     this.body.velocity.multiply(new Phaser.Math.Vector2(0.9))
+
+    if (this._taken) return
 
     if (this.target) {
       const steeringForce = this.seek(this, this.target, 100)
@@ -75,6 +83,7 @@ class Follower extends Phaser.GameObjects.Sprite {
   }
 
   avoid (target) {
+    if (this._taken) return
     const entity = this
 
     const steeringForce = this.seek(entity, target).negate()

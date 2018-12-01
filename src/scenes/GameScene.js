@@ -1,6 +1,7 @@
 import Player from 'sprites/Player'
 import Follower from 'sprites/Follower'
 import Building from 'sprites/Building'
+import Table from 'sprites/Table'
 
 class GameScene extends Phaser.Scene {
   constructor () {
@@ -28,8 +29,15 @@ class GameScene extends Phaser.Scene {
     }
     const b = this.buildings.get(600, 100)
     b.resetAs(Building.PASTE_DISPENSER)
-    const t = this.buildings.get(200, 400)
-    t.resetAs(Building.TABLE)
+
+    this.buildings.add(
+      new Table({
+        scene: this,
+        x: 200,
+        y: 400
+      }),
+      true
+    )
 
     this.followers = this.add.group({ runChildUpdate: true })
     this.followers.classType = Follower
@@ -97,7 +105,6 @@ class GameScene extends Phaser.Scene {
 
   onFollowerBuildingOverlap (follower, building) {
     if (!building.isFilled) {
-      this.followers.killAndHide(follower)
       building.takeFollower(follower)
     }
   }
