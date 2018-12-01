@@ -25,6 +25,7 @@ class BootScene extends Phaser.Scene {
     })
 
     this.load.image('player', 'assets/images/player.png')
+    this.load.image('elder', 'assets/images/elder.png')
   }
 }
 
