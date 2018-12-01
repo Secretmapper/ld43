@@ -2,16 +2,21 @@ import Player from 'sprites/Player'
 import Follower from 'sprites/Follower'
 import Building from 'sprites/Building'
 import Table from 'sprites/Table'
+import GameUI from 'ui/Game'
 
 class GameScene extends Phaser.Scene {
   constructor () {
     super({ key: 'GameScene' })
-
   }
 
   preload () {}
 
   create () {
+    this.data = {
+      food: 0,
+      science: 0
+    }
+    this.sprites = {}
     this.player = new Player({
       scene: this,
       controls: {
@@ -30,14 +35,8 @@ class GameScene extends Phaser.Scene {
     const b = this.buildings.get(600, 100)
     b.resetAs(Building.PASTE_DISPENSER)
 
-    this.buildings.add(
-      new Table({
-        scene: this,
-        x: 200,
-        y: 400
-      }),
-      true
-    )
+    const t = new Table({ scene: this, x: 200, y: 400 })
+    this.buildings.add(t, true)
 
     this.followers = this.add.group({ runChildUpdate: true })
     this.followers.classType = Follower
@@ -55,7 +54,64 @@ class GameScene extends Phaser.Scene {
 
     this.add.existing(this.player)
 
-    this.physics.add.overlap(this.followers, this.followers, this.onFollowerOverlap)
+    this.addOverlapCollisionListeners()
+
+    this.ui = new GameUI(this)
+    this.ui.create(this)
+  }
+
+  update (time, delta) {
+    this.player.update()
+  }
+
+  addFood (amount) {
+    this.data.food += amount
+    this.ui.update('food', this.data.food)
+  }
+
+  addScience (amount, building) {
+    this.data.science += amount
+    this.ui.update('science', this.data.science)
+    this.ui.addFloatText(building.x, building.y, `+${amount}`)
+  }
+
+  bothActive (a, b) {
+    return a.active && b.active
+  }
+
+  onPlayerBuildingOverlap (player, building) {
+    player.setHoveredBuilding(building)
+  }
+
+  onFollowerOverlap (follower, followerB) {
+    if (follower.target === this.player || !follower.target) {
+      follower.avoid(followerB)
+    }
+    if (follower.target === this.player || !followerB.target) {
+      followerB.avoid(follower)
+    }
+  }
+
+  onCallZoneFollowerOverlap (callZone, follower) {
+    const player = callZone.player
+
+    if (follower.target !== player && player.controls.action.isDown) {
+      if (follower.target && follower.target.approachedBy) {
+        follower.target.approachedBy(null)
+      }
+      follower.setTarget(player)
+      player.addFollower(follower)
+    }
+  }
+
+  onFollowerBuildingOverlap (follower, building) {
+    if (follower.target === building && building._approaching === follower) {
+      building.takeFollower(follower)
+    }
+  }
+
+  addOverlapCollisionListeners () {
+    this.physics.add.overlap(this.followers, this.followers, this.onFollowerOverlap, null, this)
     this.physics.add.overlap(
       this.player.callZone,
       this.followers,
@@ -75,38 +131,6 @@ class GameScene extends Phaser.Scene {
       this.bothActive,
       this
     )
-  }
-
-  update (time, delta) {
-    this.player.update()
-  }
-
-  bothActive (a, b) {
-    return a.active && b.active
-  }
-
-  onPlayerBuildingOverlap (player, building) {
-    player.setHoveredBuilding(building)
-  }
-
-  onFollowerOverlap (follower, followerB) {
-    follower.avoid(followerB)
-    followerB.avoid(follower)
-  }
-
-  onCallZoneFollowerOverlap (callZone, follower) {
-    const player = callZone.player
-
-    if (follower.target !== player && player.controls.action.isDown) {
-      follower.setTarget(player)
-      player.addFollower(follower)
-    }
-  }
-
-  onFollowerBuildingOverlap (follower, building) {
-    if (!building.isFilled) {
-      building.takeFollower(follower)
-    }
   }
 }
 

@@ -1,33 +1,44 @@
-class Table extends Phaser.GameObjects.Sprite {
+import Building from 'sprites/Building'
+
+class Table extends Building {
   constructor (config) {
-    super(config.scene, config.x, config.y, 'table')
+    super({ ...config, texture: 'table' })
     config.scene.physics.world.enable(this)
 
     this.body.setImmovable(true)
-    this.followerA = null
-    this.followerB = null
+    this._approaching = null
+    this._follower = null
+    this.elapsed = 0
   }
 
   get isFilled () {
-    return (this.followerA && this.followerB)
+    return this._approaching && this._approaching.active
+  }
+
+  getTickScore () {
+    return 5
+  }
+
+  update (time, delta) {
+    if (this._follower) {
+      this.elapsed += delta
+      if (this.elapsed >= 5000) {
+        this.scene.addScience(this.getTickScore(), this)
+
+        this.elapsed -= 5000
+      }
+    }
   }
 
   takeFollower (follower) {
-    if (!this.isFilled) {
-      let x, y
-      if (this.followerA && this.followerA !== follower) {
-        this.followerB = follower
-        x = this.x + this.width / 2
-      } else {
-        this.followerA = follower
-        x = this.x - this.width / 2
-      }
-      y = this.y
+    const x = this.x - this.width / 2
+    const y = this.y
 
-      follower.x = x
-      follower.y = y 
-      follower.taken({x, y})
-    }
+    follower.x = x
+    follower.y = y 
+    follower.taken({x, y})
+
+    this._follower = follower
   }
 }
 

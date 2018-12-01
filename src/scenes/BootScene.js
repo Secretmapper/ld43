@@ -28,6 +28,8 @@ class BootScene extends Phaser.Scene {
     this.load.image('elder', 'assets/images/elder.png')
     this.load.image('table', 'assets/images/table.png')
     this.load.image('paste_dispenser', 'assets/images/paste_dispenser.png')
+
+    this.load.image('tile', 'assets/images/tile.png')
   }
 }
 

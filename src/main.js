@@ -9,12 +9,13 @@ const config = {
   pixelArt: true,
   roundPixels: true,
   parent: 'content',
+  backgroundColor: '#f3cca3',
   width: 800,
   height: 600,
   physics: {
     default: 'arcade',
     arcade: {
-      debug: true
+      debug: false
     }
   },
   scene: [BootScene, TitleScene, GameScene]

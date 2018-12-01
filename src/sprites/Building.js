@@ -4,33 +4,42 @@ class Building extends Phaser.GameObjects.Sprite {
     config.scene.physics.world.enable(this)
 
     this.body.setImmovable(true)
-    this._isFilled = false
+    this._approaching = null
+    this._follower = null
+
+    this._isKilling = false
+  }
+
+  approachedBy (follower) {
+    this._approaching = follower
   }
 
   get isFilled () {
-    return this._isFilled
+    return (this._approaching && this._approaching.active) || this._isKilling
   }
 
   takeFollower (follower) {
-    if (!this.isFilled) {
-      this._isFilled = true
-      follower.setActive(false)
-      follower.setVisible(false)
-      this.scene.tweens.add({
-        targets: this,
-        y: this.y + 5,
-        duration: 200,
-        ease: 'Power2.easeInOut',
-        yoyo: true,
-        repeat: 4,
-        onComplete: this.onFinishTakingFollower,
-        onCompleteScope: this
-      })
-    }
+    this._isKilling = true
+    this._follower = follower
+
+    follower.setActive(false)
+    follower.setVisible(false)
+
+    this.scene.tweens.add({
+      targets: this,
+      y: this.y + 5,
+      duration: 200,
+      ease: 'Power2.easeInOut',
+      yoyo: true,
+      repeat: 4,
+      onComplete: this.onFinishTakingFollower,
+      onCompleteScope: this
+    })
   }
 
   onFinishTakingFollower (tween, target) {
-    this._isFilled = false
+    this._isKilling = false
+    this.scene.addFood(10)
   }
 
   resetAs (type) {

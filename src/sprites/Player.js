@@ -43,11 +43,14 @@ class Player extends Phaser.GameObjects.Sprite {
     }
 
     if (action.isDown) {
-      if (this.hoveredBuilding) {
-        this.followers.map(follower => {
-          follower.setTarget(this.hoveredBuilding)
-        })
-        this.followers.length = 0
+      if (
+        this.hoveredBuilding && !this.hoveredBuilding.isFilled
+        && this.followers.length > 0
+      ) {
+        const follower = this.followers.pop()
+
+        this.hoveredBuilding.approachedBy(follower)
+        follower.setTarget(this.hoveredBuilding)
       }
     }
 
