@@ -59,5 +59,8 @@ module.exports = {
   },
   optimization: {
     minimize: true
+  },
+  resolve: {
+    modules: ['node_modules', 'src'],
   }
 }
