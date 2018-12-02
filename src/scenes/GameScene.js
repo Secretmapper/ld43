@@ -21,6 +21,7 @@ class GameScene extends Phaser.Scene {
   create () {
     if (!music) {
       music = this.sound.add('theme', { volume: 0.2 })
+      this.sound.pauseOnBlur = false
       music.play({ loop: true })
     }
 
