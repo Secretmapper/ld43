@@ -6,6 +6,7 @@ class Player extends Phaser.GameObjects.Sprite {
   constructor (config) {
     super(config.scene, config.x, config.y, 'player')
     config.scene.physics.world.enable(this)
+
     this.callZone = config.scene.add.sprite(config.scene, this.x, this.y)
     config.scene.physics.world.enable(this.callZone)
     this.callZone.body.setCircle(25, 25, true)

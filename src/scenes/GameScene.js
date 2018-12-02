@@ -5,6 +5,7 @@ import PasteDispenser from 'sprites/PasteDispenser'
 import Table from 'sprites/Table'
 import Hunt from 'sprites/Hunt'
 import Radar from 'sprites/Radar'
+import Thing from 'sprites/Thing'
 import Package from 'sprites/Package'
 import GameUI from 'ui/Game'
 import Tutorial from 'ui/Tutorial'
@@ -26,10 +27,10 @@ class GameScene extends Phaser.Scene {
         paste_dispenser: { time: 10, food: 50 },
         hunt: { time: 120, food: 600 },
         craft: {
-          radar: [10, 50, 100],
-          paste_dispenser: [40, 60, 90, 130, 150],
+          radar: [10, 60, 120],
+          paste_dispenser: [40, 80, 170, 250, 300],
           table: [80, 80, 80, 80],
-          hunt: [150, 150, 150],
+          hunt: [200, 300, 500],
         },
         craftCount: {
           radar: 0,
@@ -40,9 +41,9 @@ class GameScene extends Phaser.Scene {
         currNeedIdx: 0,
         needs: [
           [90, 50],
-          [90, 150],
-          [90, 150],
-          [90, 150]
+          [75, 150],
+          [60, 250],
+          [60, 600]
         ]
       }
     }
@@ -52,6 +53,8 @@ class GameScene extends Phaser.Scene {
       player: 91,
       loadingBars: 93,
       bubble: 93,
+      thing: 100,
+      thingShadow: 92,
       ui: 1000
     }
     const controls = {
@@ -104,11 +107,14 @@ class GameScene extends Phaser.Scene {
 
     this.addOverlapCollisionListeners()
     this._pressedAction = false
+
+    this.thing = new Thing({ scene: this })
   }
 
   demandSacrifice (sacrifice) {
     this.data.food -= this.getCurrentProgression().food
     this.data.progression.currNeedIdx++
+    this.thing.comeDown()
   }
 
   getCurrentProgression () {
@@ -118,6 +124,7 @@ class GameScene extends Phaser.Scene {
 
   update (time, delta) {
     this.player.update()
+    this.thing.update()
     this.ui.update()
     this._pressedAction = this.player.controls.action.isDown
     this._alreadyCalled = false
@@ -128,9 +135,19 @@ class GameScene extends Phaser.Scene {
     this.ui.showShoppingList()
   }
 
+  getCraftTime (k) {
+    const times = this.data.progression.craft[k]
+    const count = this.data.progression.craftCount[k]
+
+    return times[count] * 1000
+  }
+
   buyItem (item) {
     const key = item[0]
-    this.data.shop.make(key, item[3])
+    this.data.shop.make(
+      key,
+      this.getCraftTime(key)
+    )
     this.tutorial.complete('controlsShop')
   }
 

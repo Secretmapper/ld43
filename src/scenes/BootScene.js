@@ -43,6 +43,8 @@ class BootScene extends Phaser.Scene {
     this.load.image('radar', 'assets/images/radar.png')
     this.load.image('hunt', 'assets/images/hunt.png')
     this.load.image('tile_bg', 'assets/images/tile_bg.png')
+    this.load.image('thing', 'assets/images/thing.png')
+    this.load.image('shadow', 'assets/images/shadow.png')
   }
 }
 
