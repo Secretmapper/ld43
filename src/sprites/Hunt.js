@@ -11,7 +11,7 @@ class Hunt extends Building {
     this.followerToLeft = false
     this.FOLLOWER_POS = (this.x + this.width - this.width / 2)
 
-    this.WAITING_TIME = 5000
+    this.WAITING_TIME = this.scene.data.progression.hunt.time * 1000
     this.making = 'COW'
   }
 

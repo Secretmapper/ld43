@@ -5,10 +5,14 @@ class PasteDispenser extends Building {
     super({ ...config, texture: 'paste_dispenser' })
 
     this._isKilling = false
+    this.WAITING_TIME = this.scene.data.progression.dispenser.time * 1000
   }
 
   get isFilled () {
     return (this._approaching && this._approaching.active) || this._isKilling
+  }
+
+  update () {
   }
 
   takeFollower (follower) {
@@ -17,6 +21,7 @@ class PasteDispenser extends Building {
 
     follower.setActive(false)
     follower.setVisible(false)
+    follower.untake()
 
     this.scene.tweens.add({
       targets: this,
@@ -24,15 +29,26 @@ class PasteDispenser extends Building {
       duration: 200,
       ease: 'Power2.easeInOut',
       yoyo: true,
-      repeat: 4,
+      repeat: (this.WAITING_TIME / 400),
+      onUpdate: this.onUpdate,
+      onUpdateScope: this,
       onComplete: this.onFinishTakingFollower,
       onCompleteScope: this
     })
   }
 
+  onUpdate (tween) {
+    this.loading.setVisible(true)
+    this.loading.resize(
+      Math.max(4, this.width * (tween.elapsed / tween.duration)),
+      4
+    )
+  }
+
   onFinishTakingFollower (tween, target) {
+    this.loading.setVisible(false)
     this._isKilling = false
-    this.scene.addFood(10)
+    this.scene.addFood(50)
   }
 
   resetAs (type) {

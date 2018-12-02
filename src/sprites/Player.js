@@ -1,5 +1,6 @@
 import Table from 'sprites/Table'
 const SPEED = 160
+const SPEED_VECTOR = new Phaser.Math.Vector2(SPEED)
 
 class Player extends Phaser.GameObjects.Sprite {
   constructor (config) {
@@ -18,6 +19,8 @@ class Player extends Phaser.GameObjects.Sprite {
     this.controls = config.controls
     this._pressedAction = false
     this.setDepth(this.scene.depths.follower)
+
+    this.movementVector = new Phaser.Math.Vector2()
   }
 
   update () {
@@ -29,24 +32,28 @@ class Player extends Phaser.GameObjects.Sprite {
     this.body.setVelocity(0)
 
     if (cursors.left.isDown) {
-      this.body.setVelocityX(-SPEED)
+      this.movementVector.set(-1, this.movementVector.y)
       this.flipX = true
     }
     else if (cursors.right.isDown) {
-      this.body.setVelocityX(SPEED)
+      this.movementVector.set(1, this.movementVector.y)
       this.flipX = false
     } else {
-      this.body.setVelocityX(0)
+      this.movementVector.set(0, this.movementVector.y)
     }
 
     // TODO: Fix diagonal speed (sqrt) bug
     if (cursors.up.isDown) {
-      this.body.setVelocityY(-SPEED)
+      this.movementVector.set(this.movementVector.x, -1)
     } else if (cursors.down.isDown) {
-      this.body.setVelocityY(SPEED)
+      this.movementVector.set(this.movementVector.x, 1)
     } else {
-      this.body.setVelocityY(0)
+      this.movementVector.set(this.movementVector.x, 0)
     }
+
+    this.movementVector.normalize()
+    this.movementVector.multiply(SPEED_VECTOR)
+    this.body.velocity.set(this.movementVector.x, this.movementVector.y)
 
     if (this.carrying) {
       this.carrying.x = this.x + this.carrying.width / 2

@@ -18,7 +18,19 @@ class GameScene extends Phaser.Scene {
   create () {
     this.data = {
       food: 0,
-      science: 0
+      science: 0,
+      progression: {
+        stress: 30,
+        radar: { time: 10 },
+        dispenser: { time: 10 },
+        hunt: { time: 20 },
+        craft: {
+          radar: 10,
+          dispenser: 40,
+          table: 80,
+          hunt: 80
+        }
+      }
     }
     this.sprites = {}
     this.depths = {
@@ -59,6 +71,10 @@ class GameScene extends Phaser.Scene {
       })
       this.followers.add(obj, true)
     }
+    for (let i = 0; i < 50; i++) {
+      const obj = new Follower({ scene: this })
+      addToGroupAndKill(this.followers, obj)
+    }
 
     this.add.existing(this.player)
 
@@ -81,16 +97,24 @@ class GameScene extends Phaser.Scene {
     this.ui.showShoppingList()
   }
 
-  buyItem (key) {
-    this.data.shop.make(key)
+  buyItem (item) {
+    const key = item[0]
+    this.data.shop.make(key, item[3])
   }
 
   deliver (builder, made) {
-    const x = builder.x - (32 + builder.width / 2)
-    const item = new Package(this, x, builder.y, made)
-    item.setActive(true)
-    item.setVisible(true)
-    this.packages.add(item, true)
+    if (made === 'CONTACT') {
+      console.log('contact')
+      const follower = this.followers.get(50, 300)
+      follower.setActive(true)
+      follower.setVisible(true)
+    } else {
+      const x = builder.x - (32 + builder.width / 2)
+      const item = new Package(this, x, builder.y, made)
+      item.setActive(true)
+      item.setVisible(true)
+      this.packages.add(item, true)
+    }
   }
 
   showSpots (carrying) {

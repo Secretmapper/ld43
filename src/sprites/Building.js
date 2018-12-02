@@ -16,6 +16,7 @@ class Building extends Phaser.GameObjects.Sprite {
     this.loading.resize(4, 4)
     this.loading.setVisible(false)
     this.loading.setDepth(this.scene.depths.loadingBars)
+    this.elapsed = 0
   }
 
   update (time, delta) {

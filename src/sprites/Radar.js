@@ -14,15 +14,22 @@ class Radar extends Building {
     })
     this.body.setSize(16, 48)
     this.body.setOffset(32, 16)
+    this.WAITING_TIME = this.scene.data.progression.radar.time * 1000
+    this.making = 'CONTACT'
   }
 
   update (time, delta) {
     super.update(time, delta)
 
-    if (this.hasUser) {
+    if (this.hasUser && this._follower) {
       this._follower.applyStress(delta)
       this._follower.flipX = false
     }
+  }
+
+  onFinish (making) {
+    this.making = 'CONTACT'
+    this.scene.deliver(this, making)
   }
 
   onLoop (time, delta) {

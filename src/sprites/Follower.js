@@ -24,7 +24,7 @@ class Follower extends Phaser.GameObjects.Sprite {
     this.setDepth(this.scene.depths.follower)
 
     this.stress = 0
-    this.STRESS_3 = 5000
+    this.STRESS_3 = this.scene.data.progression.stress * 1000
     this.STRESS_2 = this.STRESS_3 * (2/3)
     this.STRESS_1 = this.STRESS_3 * (1/3)
 
@@ -181,6 +181,16 @@ class Follower extends Phaser.GameObjects.Sprite {
     const steeringForce = this.seek(entity, target).negate()
       .normalize().multiply(FORCE_FORCE_VECTOR)
     entity.body.velocity.add(steeringForce)
+  }
+
+  setVisible (visible) {
+    super.setVisible(visible)
+    this.bubble.setVisible(visible)
+  }
+
+  setActive (active) {
+    super.setActive(active)
+    this.bubble.setActive(active)
   }
 }
 

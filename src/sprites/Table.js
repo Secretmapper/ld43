@@ -48,8 +48,9 @@ class Table extends Building {
     return 5
   }
 
-  make (making) {
+  make (making, time) {
     this.making = making
+    this.WAITING_TIME = time || 300000
   }
 
   onFinish (making) {

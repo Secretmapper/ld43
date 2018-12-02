@@ -7,25 +7,28 @@ class ShoppingList {
       curIdx: 0,
       items: [
         [
-          'paste_dispenser',
-          'Nutrient Paste Dispenser',
-          'Turns biomaterial into food',
-          ''
+          'radar',
+          'Propaganda Tower',
+          'Attract other humans to the camp',
+          this.scene.data.progression.craft.radar * 1000
         ],
         [
           'table',
           'Workbench',
           'Allows humans to craft/research',
+          this.scene.data.progression.craft.table * 1000
+        ],
+        [
+          'paste_dispenser',
+          'Bioessence Converter',
+          'Turns biomaterial into food',
+          this.scene.data.progression.craft.dispenser * 1000
         ],
         [
           'hunt',
           'Farm',
           'Allows humans to produce livestock',
-        ],
-        [
-          'radar',
-          'Propaganda Tower',
-          'Attract other humans to the camp',
+          this.scene.data.progression.craft.hunt * 1000
         ]
       ]
     }
@@ -79,7 +82,7 @@ class ShoppingList {
         this.data.curIdx = Math.max(0, this.data.curIdx - 1)
       } else if (action.isDown && !this._pressedAction) {
         // buy
-        this.scene.buyItem(this.data.items[this.data.curIdx][0])
+        this.scene.buyItem(this.data.items[this.data.curIdx])
         this.hide()
       } else if (Phaser.Input.Keyboard.JustDown(cancel)) {
         this.hide()
@@ -121,7 +124,7 @@ class ShoppingList {
       dlg,
       cursor,
       ...this.data.items.reduce((arr, item, i) => (
-        arr.concat(this.makeRow(tileBounds, item[1], item[2], i))
+        arr.concat(this.makeRow(tileBounds, item[1], item[2], item[3], i))
       ), [])
     ])
 
@@ -133,7 +136,7 @@ class ShoppingList {
     this.container = container
   }
 
-  makeRow (tileBounds, title, desc, i = 0) {
+  makeRow (tileBounds, title, desc, time, i = 0) {
     const scene = this.scene
     const tile = scene.add.nineslice(
       32, 18 + ((tileBounds.height + 4) * i),
@@ -147,7 +150,7 @@ class ShoppingList {
       scene.add.text(
         tile.x + tileBounds.width + 4,
         tile.y + 4,
-        title,
+        `${title} (${time / 1000}s)`,
         { font: '18px Arial', fill: 'white' }
       ),
       scene.add.text(
