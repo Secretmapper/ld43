@@ -29,6 +29,13 @@ export default class Thing extends Phaser.GameObjects.Sprite {
       yoyo: true,
       ease: 'Sine.easeInOut'
     })
+
+    this.bloodParticles = this.scene.add.particles('blood')
+    this.bloodParticles.setDepth(this.scene.depths.blood)
+    this.sfx = {
+      bite: this.scene.sound.add('monsterBite'),
+      growl: this.scene.sound.add('monsterGrowl'),
+    }
   }
 
   update () {
@@ -38,15 +45,17 @@ export default class Thing extends Phaser.GameObjects.Sprite {
     )
   }
 
-  comeDown () {
-    this.msg.show()
+  comeDown (back = true) {
+    this.msg.show(back)
     this.scene.tweens.add({
       targets: this,
       y: 240,
       duration: 200,
       ease: 'Bounce.easeOut',
       onComplete: () => {
-        this.comeUp()
+        if (back) {
+          this.comeUp()
+        }
       }
     })
   }
@@ -59,6 +68,37 @@ export default class Thing extends Phaser.GameObjects.Sprite {
       duration: 200,
       ease: 'Bounce.easeOut'
     })
+  }
+
+  biteOff () {
+    this.msg.setText('not satiated!')
+    this.comeDown(false)
+    this.sfx.bite.play()
+    this.sfx.growl.play()
+    this.bloodParticles.createEmitter({
+      x: this.scene.player.x,
+      y: this.scene.player.y,
+      speed: { min: -100, max: 500 },
+      gravityY: 50,
+      scale: { start: 0.4, end: 0.1 },
+      lifespan: 800,
+    })
+    this.bloodParticles.createEmitter({
+      x: this.shadow.x,
+      y: this.shadow.y - 50,
+      speed: { min: -100, max: 500 },
+      gravityY: 50,
+      lifespan: 800,
+    })
+
+    this.resMsg = this.scene.add.text(
+      400,
+      300,
+      'Press R to restart',
+      { font: '20px Kremlin', fill: 'white', stroke: '#000', strokeThickness: 5 }
+    )
+    this.resMsg.setDepth(this.scene.depths.ui)
+    this.resMsg.x = 400 - this.resMsg.width / 2
   }
 }
 
@@ -80,7 +120,12 @@ class Msg extends Phaser.GameObjects.Container {
     this.alpha = 0
   }
 
-  show () {
+  setText (msg) {
+    this.msg.setText(msg)
+    this.msg.x = 400 - this.msg.width / 2
+  }
+
+  show (back = true) {
     this.scene.tweens.add({
       targets: this,
       props: {
@@ -88,7 +133,7 @@ class Msg extends Phaser.GameObjects.Container {
       },
       duration: 300,
       ease: 'Sine.easeIn',
-      onComplete: this.hide,
+      onComplete: back ? this.hide : null,
       onCompleteScope: this
     })
   }
@@ -101,9 +146,7 @@ class Msg extends Phaser.GameObjects.Container {
       },
       delay: 1000,
       duration: 300,
-      ease: 'Sine.easeIn',
-      onComplete: this.hide,
-      onCompleteScope: this
+      ease: 'Sine.easeIn'
     })
   }
 }

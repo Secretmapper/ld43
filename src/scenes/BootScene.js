@@ -39,7 +39,10 @@ class BootScene extends Phaser.Scene {
     this.load.audio('aye_sfx', ['assets/audio/sfx/aye.ogg', 'assets/audio/sfx/aye.mp3'])
     this.load.audio('ok_sfx', ['assets/audio/sfx/ok.ogg', 'assets/audio/sfx/ok.mp3'])
     this.load.audio('where_sfx', ['assets/audio/sfx/where.ogg', 'assets/audio/sfx/where.mp3'])
+    this.load.audio('monsterGrowl', ['assets/audio/sfx/monsterGrowl.ogg', 'assets/audio/sfx/monsterGrowl.mp3'])
+    this.load.audio('monsterBite', ['assets/audio/sfx/monsterBite.ogg', 'assets/audio/sfx/monsterBite.mp3'])
 
+    this.load.image('blood', 'assets/images/blood.png');
     this.load.image('player', 'assets/images/player.png')
     this.load.image('elder', 'assets/images/elder.png')
     this.load.image('table', 'assets/images/table.png')
@@ -56,6 +59,8 @@ class BootScene extends Phaser.Scene {
       frameWidth: 16,
       frameHeight: 16
     })
+    this.load.image('antistress', 'assets/images/antistress.png')
+    this.load.image('beaconpart', 'assets/images/beaconpart.png')
     this.load.image('radar', 'assets/images/radar.png')
     this.load.image('hunt', 'assets/images/hunt.png')
     this.load.image('tile_bg', 'assets/images/tile_bg.png')

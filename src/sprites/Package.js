@@ -1,4 +1,4 @@
-const map = ['paste_dispenser', 'hunt', 'table', 'radar']
+const map = ['paste_dispenser', 'hunt', 'table', 'radar', 'antistress', 'beaconpart']
 
 export default class Package extends Phaser.GameObjects.Sprite {
   constructor (scene, x, y, made) {

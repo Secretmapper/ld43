@@ -24,14 +24,18 @@ class Follower extends Phaser.GameObjects.Sprite {
     this.setDepth(this.scene.depths.follower)
 
     this.stress = 0
-    this.STRESS_3 = this.scene.data.progression.stress * 1000
-    this.STRESS_2 = this.STRESS_3 * (2/3)
-    this.STRESS_1 = this.STRESS_3 * (1/3)
+    this.calcStressLevels()
 
     this.bubble = this.scene.add.sprite(config.x + this.width, config.y, 'bubble', 1)
     this.bubble.setDepth(this.scene.depths.bubble)
     this.bubble.setOrigin(0, 1)
     this.body.setCollideWorldBounds(true)
+  }
+
+  calcStressLevels () {
+    this.STRESS_3 = this.scene.data.progression.stress * 1000
+    this.STRESS_2 = this.STRESS_3 * (2/3)
+    this.STRESS_1 = this.STRESS_3 * (1/3)
   }
 
   setTarget (target) {
@@ -58,7 +62,9 @@ class Follower extends Phaser.GameObjects.Sprite {
   }
 
   applyStress (delta) {
-    this.stress += delta
+    this.stress += (
+      delta / (this.scene.data.progression.craftCount.antistress + 1)
+    )
 
     if (this.stress > this.STRESS_3) {
       this.scene.tutorial.tryToStart(

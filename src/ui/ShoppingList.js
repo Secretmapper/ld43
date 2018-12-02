@@ -30,6 +30,12 @@ class ShoppingList {
           'Farm',
           'Allows humans to produce livestock',
           this.scene.data.progression.craft.hunt[0] * 1000
+        ],
+        [
+          'antistress',
+          'Hospital',
+          'Applies a GLOBAL anti-stress buff',
+          this.scene.data.progression.craft.antistress[0] * 1000
         ]
       ]
     }
@@ -101,7 +107,7 @@ class ShoppingList {
     const container = scene.add.container(180, 50)
     const dlg = scene.add.nineslice(
       0, 0,
-      450, 240,
+      450, 300,
       'tile',
       18,
     )

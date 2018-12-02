@@ -10,6 +10,7 @@ import Package from 'sprites/Package'
 import GameUI from 'ui/Game'
 import Tutorial from 'ui/Tutorial'
 
+let music 
 class GameScene extends Phaser.Scene {
   constructor () {
     super({ key: 'GameScene' })
@@ -18,8 +19,10 @@ class GameScene extends Phaser.Scene {
   preload () {}
 
   create () {
-    var music = this.sound.add('theme', { volume: 0.2 })
-    music.play({ loop: true })
+    if (!music) {
+      music = this.sound.add('theme', { volume: 0.2 })
+      music.play({ loop: true })
+    }
 
     this.data = {
       food: 0,
@@ -30,14 +33,16 @@ class GameScene extends Phaser.Scene {
         paste_dispenser: { time: 10, food: 50 },
         hunt: { time: 120, food: 600 },
         craft: {
-          radar: [10, 60, 120],
+          radar: [10, 60, 200],
           paste_dispenser: [40, 80, 170, 250, 300],
-          table: [80, 80, 80, 80],
+          antistress: [120, 250, 300, 300],
           hunt: [200, 300, 500],
+          table: [150, 150, 150, 150],
         },
         craftCount: {
           radar: 0,
           paste_dispenser: 0,
+          antistress: 0,
           table: 0,
           hunt: 0,
         },
@@ -46,7 +51,10 @@ class GameScene extends Phaser.Scene {
           [90, 50],
           [90, 150],
           [60, 250],
-          [60, 300]
+          [90, 350],
+          [80, 350],
+          [90, 500],
+          [80, 500],
         ]
       }
     }
@@ -58,6 +66,7 @@ class GameScene extends Phaser.Scene {
       bubble: 93,
       thing: 100,
       thingShadow: 92,
+      blood: 100,
       ui: 1000
     }
     const controls = {
@@ -65,7 +74,8 @@ class GameScene extends Phaser.Scene {
       moveTo: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
       enter: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER),
       cancel: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X),
-      cursors: this.input.keyboard.createCursorKeys()
+      cursors: this.input.keyboard.createCursorKeys(),
+      restart: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
     }
     this.createGround()
     this.player = new Player({
@@ -113,12 +123,28 @@ class GameScene extends Phaser.Scene {
 
     this.thing = new Thing({ scene: this })
     this.thing.comeDown()
+    this.dead = false
   }
 
   demandSacrifice (sacrifice) {
     this.data.food -= this.getCurrentProgression().food
-    this.data.progression.currNeedIdx++
-    this.thing.comeDown()
+
+    if (this.data.food < 0) {
+      this.onFoodNegative()
+      this.ui.timedEvent.remove(false)
+    } else {
+      if ((this.data.progression.needs.length - 1) < this.data.progression.currNeedIdx) {
+        console.log('DONE!')
+      } else {
+        this.data.progression.currNeedIdx++
+      }
+      this.thing.comeDown()
+    }
+  }
+
+  onFoodNegative () {
+    this.thing.biteOff()
+    this.dead = true
   }
 
   getCurrentProgression () {
@@ -127,6 +153,24 @@ class GameScene extends Phaser.Scene {
   }
 
   update (time, delta) {
+    if (this.dead) {
+      if (this.player.controls.restart.isDown) {
+        // XXX: LOL
+        this.player.sfx.ok.stop()
+        this.player.sfx.aye.stop()
+        this.player.sfx.where.stop()
+        this.thing.sfx.bite.stop()
+        this.thing.sfx.growl.stop()
+        this.buildings.getChildren()
+          .map(c => { if (c.sfx) c.sfx.stop() })
+
+        this.scene.restart()
+      }
+      this.player.setVisible(false)
+      this.ui.hideShoppingList()
+      return
+    }
+
     this.player.update()
     this.thing.update()
     this.ui.update()
@@ -234,6 +278,8 @@ class GameScene extends Phaser.Scene {
         this.buildings.add(new Hunt({ scene: this, x: spot.x, y: spot.y }), true)
       } else if (item.key === 'radar') {
         this.buildings.add(new Radar({ scene: this, x: spot.x, y: spot.y }), true)
+      } else if (item.key === 'antistress') {
+        this.buildings.add(new Phaser.GameObjects.Sprite(this, spot.x, spot.y, 'antistress'), true)
       }
     }
   }

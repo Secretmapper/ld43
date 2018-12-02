@@ -63,6 +63,18 @@ class GameUI {
           setXY: { x: 400, y: 210 + 80, stepX: 120 }
         }
       ]),
+      antistress: scene.physics.add.group([
+        {
+          key: 'antistress',
+          repeat: 1,
+          setXY: { x: 200, y: 150, stepX: 80 }
+        },
+        {
+          key: 'antistress',
+          repeat: 1,
+          setXY: { x: 200, y: 250, stepX: 80 }
+        }
+      ]),
       radar: scene.physics.add.group({ key: 'radar', repeat: 2, setXY: { x: 280, y: 380, stepX: 80 } }),
       hunt: scene.physics.add.group({ key: 'hunt', repeat: 2, setXY: { x: 200, y: 50, stepX: 100 } }),
       table: scene.physics.add.group({ key: 'table', repeat: 2, setXY: { x: 100, y: 400, stepY: -50 } }),
@@ -73,6 +85,7 @@ class GameUI {
       .addMultiple(this.spots.radar.getChildren())
       .addMultiple(this.spots.hunt.getChildren())
       .addMultiple(this.spots.table.getChildren())
+      .addMultiple(this.spots.antistress.getChildren())
 
     this.spots.all.getChildren().map(c => {
       c.tint = 0x888888
@@ -168,6 +181,10 @@ class GameUI {
 
   showShoppingList () {
     this.shoppingList.show()
+  }
+
+  hideShoppingList () {
+    this.shoppingList.hide()
   }
 
   get shoppingListShown () {
