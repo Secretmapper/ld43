@@ -17,7 +17,6 @@ class PasteDispenser extends Building {
 
   takeFollower (follower) {
     this._isKilling = true
-    this._follower = follower
 
     follower.setActive(false)
     follower.setVisible(false)

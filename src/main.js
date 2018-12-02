@@ -12,7 +12,7 @@ const config = {
   parent: 'content',
   backgroundColor: '#f3cca3',
   width: 800,
-  height: 600,
+  height: 500,
   physics: {
     default: 'arcade',
     arcade: {

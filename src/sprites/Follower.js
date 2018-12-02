@@ -31,6 +31,7 @@ class Follower extends Phaser.GameObjects.Sprite {
     this.bubble = this.scene.add.sprite(config.x + this.width, config.y, 'bubble', 1)
     this.bubble.setDepth(this.scene.depths.bubble)
     this.bubble.setOrigin(0, 1)
+    this.body.setCollideWorldBounds(true)
   }
 
   setTarget (target) {

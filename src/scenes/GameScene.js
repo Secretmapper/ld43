@@ -54,11 +54,11 @@ class GameScene extends Phaser.Scene {
     this.packages = this.add.group({ runChildUpdate: true })
     this.buildings = this.add.group({ runChildUpdate: true })
     
-    const t = new Table({ scene: this, x: 100, y: 400 })
+    const t = new Table({ scene: this, x: 100, y: 450 })
     this.buildings.add(t, true)
     this.buildings.add(new PasteDispenser({ scene: this, x: 600, y: 50 }), true)
     this.buildings.add(new Hunt({ scene: this, x: 100, y: 50 }), true)
-    this.buildings.add(new Radar({ scene: this, x: 300, y: 550 }), true)
+    this.buildings.add(new Radar({ scene: this, x: 200, y: 450 }), true)
 
     this.followers = this.add.group({ runChildUpdate: true })
     this.followers.classType = Follower
@@ -104,7 +104,6 @@ class GameScene extends Phaser.Scene {
 
   deliver (builder, made) {
     if (made === 'CONTACT') {
-      console.log('contact')
       const follower = this.followers.get(50, 300)
       follower.reset()
     } else {
