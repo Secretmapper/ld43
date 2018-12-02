@@ -35,10 +35,12 @@ class Player extends Phaser.GameObjects.Sprite {
     if (cursors.left.isDown) {
       this.movementVector.set(-1, this.movementVector.y)
       this.flipX = true
+      this.scene.tutorial.complete('controls')
     }
     else if (cursors.right.isDown) {
       this.movementVector.set(1, this.movementVector.y)
       this.flipX = false
+      this.scene.tutorial.complete('controls')
     } else {
       this.movementVector.set(0, this.movementVector.y)
     }
@@ -46,8 +48,10 @@ class Player extends Phaser.GameObjects.Sprite {
     // TODO: Fix diagonal speed (sqrt) bug
     if (cursors.up.isDown) {
       this.movementVector.set(this.movementVector.x, -1)
+      this.scene.tutorial.complete('controls')
     } else if (cursors.down.isDown) {
       this.movementVector.set(this.movementVector.x, 1)
+      this.scene.tutorial.complete('controls')
     } else {
       this.movementVector.set(this.movementVector.x, 0)
     }
@@ -92,7 +96,11 @@ class Player extends Phaser.GameObjects.Sprite {
     this._pressedMoveTo = moveTo.isDown
 
     if (cancel.isDown) {
-      this.clearFollowers()
+      if (this.hoveredBuilding instanceof Table) {
+        this.hoveredBuilding.making = null
+      } else {
+        this.clearFollowers()
+      }
     }
 
     this.hoveredBuilding = undefined

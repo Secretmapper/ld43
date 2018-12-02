@@ -61,6 +61,13 @@ class Follower extends Phaser.GameObjects.Sprite {
     this.stress += delta
 
     if (this.stress > this.STRESS_3) {
+      this.scene.tutorial.tryToStart(
+        'stress', [
+          'Being assigned to work brings stress to the person',
+          'This makes them unfit for work until they relax'
+        ],
+        2000
+      )
       this.untake()
     }
   }

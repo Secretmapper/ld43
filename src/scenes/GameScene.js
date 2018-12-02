@@ -7,6 +7,7 @@ import Hunt from 'sprites/Hunt'
 import Radar from 'sprites/Radar'
 import Package from 'sprites/Package'
 import GameUI from 'ui/Game'
+import Tutorial from 'ui/Tutorial'
 
 class GameScene extends Phaser.Scene {
   constructor () {
@@ -32,7 +33,9 @@ class GameScene extends Phaser.Scene {
         },
         currNeedIdx: 0,
         needs: [
-          [10, 50],
+          [90, 50],
+          [90, 150],
+          [90, 150],
           [90, 150]
         ]
       }
@@ -66,7 +69,7 @@ class GameScene extends Phaser.Scene {
     this.buildings.add(t, true)
     this.buildings.add(new PasteDispenser({ scene: this, x: 600, y: 50 }), true)
     this.buildings.add(new Hunt({ scene: this, x: 100, y: 50 }), true)
-    this.buildings.add(new Radar({ scene: this, x: 200, y: 450 }), true)
+    this.buildings.add(new Radar({ scene: this, x: 200, y: 380 }), true)
 
     this.followers = this.add.group({ runChildUpdate: true })
     this.followers.classType = Follower
@@ -85,6 +88,9 @@ class GameScene extends Phaser.Scene {
     }
 
     this.add.existing(this.player)
+
+    this.tutorial = new Tutorial(this)
+    this.tutorial.tryToStart('controls', 'Use arrow keys to move')
 
     this.ui = new GameUI(this)
     this.ui.create(this, controls)
@@ -118,6 +124,7 @@ class GameScene extends Phaser.Scene {
   buyItem (item) {
     const key = item[0]
     this.data.shop.make(key, item[3])
+    this.tutorial.complete('controlsShop')
   }
 
   deliver (builder, made) {
@@ -125,6 +132,13 @@ class GameScene extends Phaser.Scene {
       const follower = this.followers.get(50, 300)
       follower.reset()
     } else {
+      this.tutorial.tryToStart(
+        'controlsBuilding',
+        [
+          'Your worker has finished a building! Go to the item',
+          "Drag it with the space key to the designated spots"
+        ]
+      )
       const x = builder.x - (32 + builder.width / 2)
       const item = new Package(this, x, builder.y, made)
       item.setActive(true)
@@ -144,6 +158,7 @@ class GameScene extends Phaser.Scene {
   addFood (amount) {
     this.data.food += amount
     this.ui.setFood(this.data.food)
+    this.tutorial.complete('sacrifice')
   }
 
   addScience (amount, building) {
@@ -180,6 +195,7 @@ class GameScene extends Phaser.Scene {
     ) {
       spot.taken = true
       item.destroy()
+      this.tutorial.complete('controlsBuilding')
       if (item.key === 'paste_dispenser') {
         this.buildings.add(new PasteDispenser({ scene: this, x: spot.x, y: spot.y }), true)
       } else if (item.key === 'table') {
@@ -213,6 +229,8 @@ class GameScene extends Phaser.Scene {
       if (follower.target && follower.target.approachedBy) {
         follower.target.approachedBy(null)
       }
+
+      this.tutorial.complete('controls2')
       this._alreadyCalled = true
       follower.untake()
       follower.setTarget(player)
@@ -222,6 +240,12 @@ class GameScene extends Phaser.Scene {
 
   onFollowerBuildingOverlap (follower, building) {
     if (follower.target === building && building._approaching === follower) {
+      if (building instanceof Radar) {
+        this.tutorial.complete('radar')
+      }
+      if (building instanceof Table) {
+        this.tutorial.complete('controlsWorkbench')
+      }
       building.takeFollower(follower)
     } else {
       follower.avoid(building)
