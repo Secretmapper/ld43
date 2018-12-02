@@ -98,10 +98,10 @@ class ShoppingList {
 
   createUI () {
     const { scene } = this
-    const container = scene.add.container(200, 50)
+    const container = scene.add.container(180, 50)
     const dlg = scene.add.nineslice(
       0, 0,
-      340, 240,
+      450, 240,
       'tile',
       18,
     )
@@ -151,8 +151,8 @@ class ShoppingList {
     this.costTexts[key] = scene.add.text(
       tile.x + tileBounds.width + 4,
       tile.y + 4,
-      `${title} (${time / 1000}s)`,
-      { font: '18px Arial', fill: 'white' }
+      `${title} - (${time / 1000} SEC)`.toUpperCase(),
+      { font: '18px Kremlin', fill: 'white' }
     )
     this.costTexts[key].title = title
 
@@ -162,8 +162,8 @@ class ShoppingList {
       scene.add.text(
         tile.x + tileBounds.width + 4,
         tile.y + tileBounds.height / 2 + 4,
-        desc,
-        { font: '14px Arial', fill: 'white' }
+        desc.toUpperCase(),
+        { font: '14px Kremlin', fill: 'white' }
       )
     ]
   }
@@ -175,7 +175,7 @@ class ShoppingList {
       const time = times[Math.min(times.length - 1, count)] * 1000
 
       this.costTexts[k].setText(
-        `${this.costTexts[k].title} (${time / 1000}s)`,
+        `${this.costTexts[k].title} (${time / 1000} SEC)`,
       )
     }
   }

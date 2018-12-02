@@ -5,11 +5,23 @@ class GameUI {
     this.scene = scene
     const { width, height } = this.scene.sys.canvas
 
+    const dlg = scene.add.nineslice(
+      width - 160, height - 110,
+      160, 240,
+      'tile',
+      18,
+    )
     this.food = scene.add.text(
+      width - 140,
+      height - 90,
+      '',
+      { font: '20px Kremlin', fill: 'white' }
+    )
+    this.foodNeeded = scene.add.text(
       width - 140,
       height - 60,
       '',
-      { font: '20px Arial', fill: 'white' }
+      { font: '20px Kremlin', fill: 'white' }
     )
 
     this.currTime = this.scene.getCurrentProgression().time + 1
@@ -17,7 +29,7 @@ class GameUI {
       width - 140,
       height - 30,
       '',
-      { font: '20px Arial', fill: 'white' }
+      { font: '20px Kremlin', fill: 'white' }
     )
     this.timedEvent = scene.time.addEvent({
       delay: 1000,
@@ -104,7 +116,8 @@ class GameUI {
   }
 
   setFood(num) {
-    this.food.setText(`Food: ${num}/${this.scene.getCurrentProgression().food}`)
+    this.food.setText(`Food: ${num}`)
+    this.foodNeeded.setText(`NEED: ${this.scene.getCurrentProgression().food}`)
   }
 
   addFloatText (x, y, message) {
@@ -112,7 +125,7 @@ class GameUI {
       x,
       y,
       message,
-      { font: '12px Arial', fill: 'white' }
+      { font: '12px Kremlin', fill: 'white' }
     )
 
     this.scene.tweens.add({

@@ -18,6 +18,9 @@ class GameScene extends Phaser.Scene {
   preload () {}
 
   create () {
+    var music = this.sound.add('theme')
+    music.play({ loop: true })
+
     this.data = {
       food: 0,
       science: 0,
@@ -109,6 +112,7 @@ class GameScene extends Phaser.Scene {
     this._pressedAction = false
 
     this.thing = new Thing({ scene: this })
+    this.thing.comeDown()
   }
 
   demandSacrifice (sacrifice) {
@@ -194,7 +198,7 @@ class GameScene extends Phaser.Scene {
   }
 
   makeContact (building) {
-    this.ui.addFloatText(building.x, building.y, `+${10}`)
+    this.ui.addFloatText(building.x, building.y, `Ping...`)
   }
 
   bothActive (a, b) {

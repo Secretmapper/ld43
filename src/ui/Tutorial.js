@@ -1,16 +1,19 @@
 class Tip {
   constructor (scene, key, msg) {
-    const container = scene.add.container(240, 550)
+    const container = scene.add.container(180, 550)
     const slice = scene.add.nineslice(
       0, 0,
-      340, 60,
+      400, 60,
       'tile',
       18,
     )
     const txt = scene.add.text(
-      18, 14,
-      msg,
-      { font: '12px Arial', fill: 'white' }
+      18, 16,
+      msg.toUpperCase
+        ? msg.toUpperCase()
+        : msg.map(m => m.toUpperCase())
+      ,
+      { font: '12px Kremlin', fill: 'white' }
     )
 
     container.add(slice)

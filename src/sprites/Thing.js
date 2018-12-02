@@ -13,6 +13,9 @@ export default class Thing extends Phaser.GameObjects.Sprite {
     this.shadow.setDepth(scene.depths.thingShadow)
     this.container = container
 
+    this.msg = new Msg(this.scene, 0, 0)
+    this.scene.add.existing(this.msg)
+
     this.scene.tweens.add({
       targets: container,
       props: {
@@ -36,9 +39,9 @@ export default class Thing extends Phaser.GameObjects.Sprite {
   }
 
   comeDown () {
+    this.msg.show()
     this.scene.tweens.add({
       targets: this,
-      delay: 1000,
       y: 240,
       duration: 200,
       ease: 'Bounce.easeOut',
@@ -51,10 +54,56 @@ export default class Thing extends Phaser.GameObjects.Sprite {
   comeUp () {
     this.scene.tweens.add({
       targets: this,
-      delay: 1000,
       y: 0,
+      delay: 500,
       duration: 200,
       ease: 'Bounce.easeOut'
+    })
+  }
+}
+
+class Msg extends Phaser.GameObjects.Container {
+  constructor (scene, x, y) {
+    super(scene, 0, 0)
+
+    this.msg = scene.add.text(
+      400,
+      200,
+      'Satiated!',
+      { font: '80px Kremlin', fill: 'white', stroke: '#000', strokeThickness: 10 }
+    )
+    this.msg.x = 400 - this.msg.width / 2
+
+    this.setDepth(this.scene.depths.ui)
+
+    this.add(this.msg)
+    this.alpha = 0
+  }
+
+  show () {
+    this.scene.tweens.add({
+      targets: this,
+      props: {
+        alpha: 1
+      },
+      duration: 300,
+      ease: 'Sine.easeIn',
+      onComplete: this.hide,
+      onCompleteScope: this
+    })
+  }
+
+  hide () {
+    this.scene.tweens.add({
+      targets: this,
+      props: {
+        alpha: 0
+      },
+      delay: 1000,
+      duration: 300,
+      ease: 'Sine.easeIn',
+      onComplete: this.hide,
+      onCompleteScope: this
     })
   }
 }

@@ -1,3 +1,5 @@
+var WebFont = require('webfontloader')
+
 class BootScene extends Phaser.Scene {
   constructor () {
     super({ key: 'BootScene' })
@@ -17,6 +19,14 @@ class BootScene extends Phaser.Scene {
         60
       )
     })
+    WebFont.load({
+      custom: {
+        families: [ 'Kremlin' ]
+      },
+      active: () => {
+        this.add.text(32, 32, '', { fontFamily: 'Kremlin', fontSize: 80, color: '#ff0000' }).setShadow(2, 2, "#333333", 2, false, true)
+      }
+    });
 
     // Register a load complete event to launch the title screen when all files are loaded
     this.load.on('complete', () => {
@@ -24,6 +34,8 @@ class BootScene extends Phaser.Scene {
       this.scene.start('TitleScene')
     })
 
+    this.load.audio('theme', ['assets/ld43.ogg', 'assets/ld43.mp3'])
+    this.load.audio('dispenser_sfx', ['assets/audio/dispenser.ogg', 'assets/audio/dispenser.mp3'])
     this.load.image('player', 'assets/images/player.png')
     this.load.image('elder', 'assets/images/elder.png')
     this.load.image('table', 'assets/images/table.png')

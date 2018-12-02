@@ -66,7 +66,7 @@ class Follower extends Phaser.GameObjects.Sprite {
           'Being assigned to work brings stress to the person',
           'This makes them unfit for work until they relax'
         ],
-        2000
+        5000
       )
       this.untake()
     }

@@ -6,6 +6,8 @@ class PasteDispenser extends Building {
 
     this._isKilling = false
     this.WAITING_TIME = this.scene.data.progression.paste_dispenser.time * 1000
+
+    this.sfx = this.scene.sound.add('dispenser_sfx')
   }
 
   get isFilled () {
@@ -32,6 +34,9 @@ class PasteDispenser extends Building {
       repeat: (this.WAITING_TIME / 400),
       onUpdate: this.onUpdate,
       onUpdateScope: this,
+      onStart: () => {
+        this.sfx.play()
+      },
       onComplete: this.onFinishTakingFollower,
       onCompleteScope: this
     })
