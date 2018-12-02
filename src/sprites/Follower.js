@@ -47,11 +47,12 @@ class Follower extends Phaser.GameObjects.Sprite {
   }
 
   untake () {
+    this.target = null
+    this.body.setImmovable(false)
+
     if (this._taker) {
-      this.target = null
       this._taker.untakeFollower(this)
       this._taker = null
-      this.body.setImmovable(false)
     }
   }
 
@@ -191,6 +192,13 @@ class Follower extends Phaser.GameObjects.Sprite {
   setActive (active) {
     super.setActive(active)
     this.bubble.setActive(active)
+  }
+
+  reset () {
+    this.stress = 0
+    this.elapsed = 0
+    this.setActive(true)
+    this.setVisible(true)
   }
 }
 

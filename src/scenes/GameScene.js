@@ -21,7 +21,7 @@ class GameScene extends Phaser.Scene {
       science: 0,
       progression: {
         stress: 30,
-        radar: { time: 10 },
+        radar: { time: 25 },
         dispenser: { time: 10 },
         hunt: { time: 20 },
         craft: {
@@ -63,7 +63,7 @@ class GameScene extends Phaser.Scene {
     this.followers = this.add.group({ runChildUpdate: true })
     this.followers.classType = Follower
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
       const obj = new Follower({
         scene: this,
         x: 250 + (i % 5) * 24,
@@ -106,8 +106,7 @@ class GameScene extends Phaser.Scene {
     if (made === 'CONTACT') {
       console.log('contact')
       const follower = this.followers.get(50, 300)
-      follower.setActive(true)
-      follower.setVisible(true)
+      follower.reset()
     } else {
       const x = builder.x - (32 + builder.width / 2)
       const item = new Package(this, x, builder.y, made)
