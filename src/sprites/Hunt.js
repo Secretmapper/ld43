@@ -11,20 +11,12 @@ class Hunt extends Building {
     this.followerToLeft = false
     this.FOLLOWER_POS = (this.x + this.width - this.width / 2)
 
+    this.WAITING_TIME = 5000
+    this.making = 'COW'
   }
 
-  update (time, delta) {
-    const TIME = 5000
-
-    if (this.hasUser) {
-      this.elapsed += delta
-
-      this._follower.applyStress(delta)
-
-      if (this.elapsed >= TIME) {
-        this.elapsed -= TIME
-      }
-    }
+  onFinish () {
+    this.making = 'COW'
   }
 
   takeFollower (follower) {

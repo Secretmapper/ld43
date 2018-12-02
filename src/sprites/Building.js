@@ -6,6 +6,44 @@ class Building extends Phaser.GameObjects.Sprite {
     this.body.setImmovable(true)
     this._approaching = null
     this._follower = null
+
+    this.loading = this.scene.add.nineslice(
+      this.x - this.width / 2, this.y + 4 + this.height / 2,
+      this.width, 4,
+      'loading',
+      2,
+    )
+    this.loading.resize(4, 4)
+    this.loading.setVisible(false)
+    this.loading.setDepth(this.scene.depths.loadingBars)
+  }
+
+  update (time, delta) {
+    const TIME = this.WAITING_TIME
+
+    if (this.hasUser && this.making) {
+      this.elapsed += delta
+
+      this._follower.applyStress(delta)
+
+      this.loading.resize(
+        Math.max(4, this.width * (this.elapsed / TIME)), 4
+      )
+      this.loading.setVisible(true)
+
+      if (this.elapsed >= TIME) {
+        const making = this.making
+        this.making = null
+        this.elapsed -= TIME
+
+        this.onFinish(this.making)
+      }
+    } else {
+      this.loading.setVisible(false)
+    }
+  }
+
+  onFinish () {
   }
 
   approachedBy (follower) {

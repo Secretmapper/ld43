@@ -27,6 +27,11 @@ class Table extends Building {
     this.WAITING_TIME = 5000
   }
 
+  update (time, delta) {
+    this.bubble.setVisible(this.canMake)
+    super.update(time, delta)
+  }
+
   get canMake () {
     return (this.hasUser && !this.making)
   }
@@ -47,24 +52,9 @@ class Table extends Building {
     this.making = making
   }
 
-  update (time, delta) {
-    const TIME = this.WAITING_TIME
-
-    this.bubble.setVisible(this.canMake)
-
-    if (this.hasUser && this.making) {
-      this.elapsed += delta
-
-      this._follower.applyStress(delta)
-
-      if (this.elapsed >= TIME) {
-        this.scene.addScience(this.getTickScore(), this)
-        this.scene.deliver(this, this.making)
-
-        this.elapsed -= TIME
-        this.making = null
-      }
-    }
+  onFinish (making) {
+    this.scene.addScience(this.getTickScore(), this)
+    this.scene.deliver(this, making)
   }
 }
 

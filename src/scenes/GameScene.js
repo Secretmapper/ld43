@@ -24,6 +24,7 @@ class GameScene extends Phaser.Scene {
     this.depths = {
       follower: 90,
       player: 91,
+      loadingBars: 93,
       bubble: 93,
       ui: 1000
     }
