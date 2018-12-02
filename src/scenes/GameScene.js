@@ -1,6 +1,7 @@
 import Player from 'sprites/Player'
 import Follower from 'sprites/Follower'
 import Building from 'sprites/Building'
+import PasteDispenser from 'sprites/PasteDispenser'
 import Table from 'sprites/Table'
 import Hunt from 'sprites/Hunt'
 import Radar from 'sprites/Radar'
@@ -38,15 +39,10 @@ class GameScene extends Phaser.Scene {
     })
     this.packages = this.add.group({ runChildUpdate: true })
     this.buildings = this.add.group({ runChildUpdate: true })
-    this.buildings.classType = Building
-    for (let i = 0; i < 10; i++) {
-      addToGroupAndKill(this.buildings, new Building({ scene: this, x: 0, y: 0, texture: 'paste_dispenser' }))
-    }
-    const b = this.buildings.get(600, 50)
-    b.resetAs(Building.PASTE_DISPENSER )
-
+    
     const t = new Table({ scene: this, x: 100, y: 400 })
     this.buildings.add(t, true)
+    this.buildings.add(new PasteDispenser({ scene: this, x: 600, y: 50 }), true)
     this.buildings.add(new Hunt({ scene: this, x: 100, y: 50 }), true)
     this.buildings.add(new Radar({ scene: this, x: 300, y: 550 }), true)
 
@@ -142,8 +138,7 @@ class GameScene extends Phaser.Scene {
       spot.taken = true
       item.destroy()
       if (item.key === 'paste_dispenser') {
-        const b = this.buildings.get(spot.x, spot.y)
-        b.resetAs(Building.PASTE_DISPENSER)
+        this.buildings.add(new PasteDispenser({ scene: this, x: spot.x, y: spot.y }), true)
       } else if (item.key === 'table') {
         this.buildings.add(new Table({ scene: this, x: spot.x, y: spot.y }), true)
       } else if (item.key === 'hunt') {

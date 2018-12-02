@@ -64,22 +64,6 @@ class Table extends Building {
       }
     }
   }
-
-  takeFollower (follower) {
-    const x = this.x + this.width / 2
-    const y = this.y
-
-    follower.x = x
-    follower.y = y 
-    follower.taken(this, {x, y})
-
-    this._follower = follower
-  }
-
-  untakeFollower (follower) {
-    this._follower = null
-    this._approaching = null
-  }
 }
 
 export default Table
