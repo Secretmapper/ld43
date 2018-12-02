@@ -82,6 +82,7 @@ class Player extends Phaser.GameObjects.Sprite {
     }
 
     this.hoveredBuilding = undefined
+    this.flipX = this.body.velocity.x < 0 || this._taken
   }
 
   carry (itemPackage) {

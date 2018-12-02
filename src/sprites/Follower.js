@@ -75,6 +75,8 @@ class Follower extends Phaser.GameObjects.Sprite {
         this.body.velocity.normalize().multiply(MAX_WANDER_VECTOR).multiply({ x: 0.8, y: 0.8 })
       }
     }
+
+    this.flipX = this.body.velocity.x < 0 || this._taken
   }
 
   getRandomWanderTime () {

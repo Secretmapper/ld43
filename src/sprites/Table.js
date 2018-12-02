@@ -23,6 +23,8 @@ class Table extends Building {
       duration: 500,
       ease: 'Linear'
     })
+
+    this.WAITING_TIME = 5000
   }
 
   get canMake () {
@@ -46,7 +48,7 @@ class Table extends Building {
   }
 
   update (time, delta) {
-    const TIME = 500
+    const TIME = this.WAITING_TIME
 
     this.bubble.setVisible(this.canMake)
 

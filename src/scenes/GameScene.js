@@ -48,7 +48,7 @@ class GameScene extends Phaser.Scene {
     this.followers = this.add.group({ runChildUpdate: true })
     this.followers.classType = Follower
 
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 5; i++) {
       const obj = new Follower({
         scene: this,
         x: 250 + (i % 5) * 24,
