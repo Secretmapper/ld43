@@ -24,7 +24,7 @@ class GameScene extends Phaser.Scene {
         stress: 30,
         radar: { time: 25 },
         dispenser: { time: 10, food: 50 },
-        hunt: { time: 120, food: 100 },
+        hunt: { time: 120, food: 200 },
         craft: {
           radar: 10,
           dispenser: 40,
@@ -55,6 +55,7 @@ class GameScene extends Phaser.Scene {
       cancel: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X),
       cursors: this.input.keyboard.createCursorKeys()
     }
+    this.createGround()
     this.player = new Player({
       scene: this,
       controls,
@@ -294,11 +295,35 @@ class GameScene extends Phaser.Scene {
       this
     )
   }
+
+  createGround () {
+    const level = arrOf(500 / 24, arrOf(800 / 24, 0))
+    const height = level.length
+    const width = level[0].length
+
+    const map = this.make.tilemap({ data: level, tileWidth: 24, tileHeight: 24 })
+    const tiles = map.addTilesetImage('tile_bg')
+    const layer = map.createBlankDynamicLayer('ground', tiles)
+    layer.weightedRandomize(0, 0, width, height, [
+        { index: 0, weight: 20 }, // 9/10 times, use index 6
+        { index: [1, 2], weight: 1 } // 1/10 times, randomly pick 7, 8 or 26
+      ]);
+    layer.setDepth(-2)
+  }
 }
 
 const addToGroupAndKill = (group, obj) => {
   group.add(obj, true)
   group.killAndHide(obj)
+}
+
+// lol
+const arrOf = (n, item) => {
+  const arr = []
+  for (let i = 0; i < n + 1; i++) {
+    arr.push(item)
+  }
+  return arr
 }
 
 export default GameScene
