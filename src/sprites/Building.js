@@ -36,11 +36,11 @@ class Building extends Phaser.GameObjects.Sprite {
         this.making = null
         this.elapsed -= TIME
 
-        this.onFinish(this.making)
+        this.onFinish(making)
       }
-    } else {
-      this.loading.setVisible(false)
     }
+    
+    this.loading.setVisible(this.making && this.elapsed > 0)
   }
 
   onFinish () {
