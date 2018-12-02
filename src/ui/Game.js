@@ -34,6 +34,7 @@ class GameUI {
       .addMultiple(this.spots.table.getChildren())
 
     this.spots.all.getChildren().map(c => {
+      c.tint = 0x888888
       c.setVisible(false)
       c.setDepth(-1)
     })
@@ -45,7 +46,7 @@ class GameUI {
 
   showSpots (key) {
     this.spots[key].getChildren().map(
-      c => c.setVisible(true)
+      c => { if (!c.taken) c.setVisible(true) }
     )
   }
 
