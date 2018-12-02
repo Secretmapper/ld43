@@ -34,7 +34,7 @@ class GameUI {
     this.shoppingList = new ShoppingList(scene, controls)
 
     this.spots = {
-      paste_dispenser: scene.physics.add.group({ key: 'paste_dispenser', repeat: 5, setXY: { x: 600, y: 130, stepY: 80 } }),
+      paste_dispenser: scene.physics.add.group({ key: 'paste_dispenser', repeat: 4, setXY: { x: 600, y: 130, stepY: 80 } }),
       radar: scene.physics.add.group({ key: 'radar', repeat: 2, setXY: { x: 280, y: 380, stepX: 80 } }),
       hunt: scene.physics.add.group({ key: 'hunt', repeat: 2, setXY: { x: 200, y: 50, stepX: 100 } }),
       table: scene.physics.add.group({ key: 'table', repeat: 2, setXY: { x: 100, y: 400, stepY: -50 } }),
@@ -129,6 +129,10 @@ class GameUI {
 
   get shoppingListShown () {
     return this.shoppingList.toShow || this.shoppingList.showing
+  }
+
+  updateShoppingList () {
+    this.shoppingList.updateCosts()
   }
 }
 

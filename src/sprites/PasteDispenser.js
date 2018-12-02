@@ -5,7 +5,7 @@ class PasteDispenser extends Building {
     super({ ...config, texture: 'paste_dispenser' })
 
     this._isKilling = false
-    this.WAITING_TIME = this.scene.data.progression.dispenser.time * 1000
+    this.WAITING_TIME = this.scene.data.progression.paste_dispenser.time * 1000
   }
 
   get isFilled () {
@@ -48,7 +48,7 @@ class PasteDispenser extends Building {
   onFinishTakingFollower (tween, target) {
     this.loading.setVisible(false)
     this._isKilling = false
-    this.scene.addFood(this.scene.data.progression.dispenser.food)
+    this.scene.addFood(this.scene.data.progression.paste_dispenser.food)
   }
 
   resetAs (type) {

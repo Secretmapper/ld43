@@ -3,6 +3,7 @@ class ShoppingList {
     this.scene = scene
     this.controls = controls
 
+    this.costTexts = {}
     this.data = {
       curIdx: 0,
       items: [
@@ -10,25 +11,25 @@ class ShoppingList {
           'radar',
           'Propaganda Tower',
           'Attract other humans to the camp',
-          this.scene.data.progression.craft.radar * 1000
+          this.scene.data.progression.craft.radar[0] * 1000
         ],
         [
           'table',
           'Workbench',
           'Allows humans to craft/research',
-          this.scene.data.progression.craft.table * 1000
+          this.scene.data.progression.craft.table[0] * 1000
         ],
         [
           'paste_dispenser',
           'Bioessence Converter',
           'Turns biomaterial into food',
-          this.scene.data.progression.craft.dispenser * 1000
+          this.scene.data.progression.craft.paste_dispenser[0] * 1000
         ],
         [
           'hunt',
           'Farm',
           'Allows humans to produce livestock',
-          this.scene.data.progression.craft.hunt * 1000
+          this.scene.data.progression.craft.hunt[0] * 1000
         ]
       ]
     }
@@ -126,7 +127,7 @@ class ShoppingList {
       dlg,
       cursor,
       ...this.data.items.reduce((arr, item, i) => (
-        arr.concat(this.makeRow(tileBounds, item[1], item[2], item[3], i))
+        arr.concat(this.makeRow(tileBounds, item[1], item[2], item[3], item[0], i))
       ), [])
     ])
 
@@ -138,7 +139,7 @@ class ShoppingList {
     this.container = container
   }
 
-  makeRow (tileBounds, title, desc, time, i = 0) {
+  makeRow (tileBounds, title, desc, time, key, i = 0) {
     const scene = this.scene
     const tile = scene.add.nineslice(
       32, 18 + ((tileBounds.height + 4) * i),
@@ -147,14 +148,17 @@ class ShoppingList {
     )
     tile.setOrigin(0)
 
+    this.costTexts[key] = scene.add.text(
+      tile.x + tileBounds.width + 4,
+      tile.y + 4,
+      `${title} (${time / 1000}s)`,
+      { font: '18px Arial', fill: 'white' }
+    )
+    this.costTexts[key].title = title
+
     return [
       tile,
-      scene.add.text(
-        tile.x + tileBounds.width + 4,
-        tile.y + 4,
-        `${title} (${time / 1000}s)`,
-        { font: '18px Arial', fill: 'white' }
-      ),
+      this.costTexts[key],
       scene.add.text(
         tile.x + tileBounds.width + 4,
         tile.y + tileBounds.height / 2 + 4,
@@ -162,6 +166,18 @@ class ShoppingList {
         { font: '14px Arial', fill: 'white' }
       )
     ]
+  }
+
+  updateCosts () {
+    for (var k in this.costTexts) {
+      const times = this.scene.data.progression.craft[k]
+      const count = this.scene.data.progression.craftCount[k]
+      const time = times[Math.min(times.length - 1, count)] * 1000
+
+      this.costTexts[k].setText(
+        `${this.costTexts[k].title} (${time / 1000}s)`,
+      )
+    }
   }
 }
 

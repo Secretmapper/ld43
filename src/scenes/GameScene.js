@@ -23,13 +23,19 @@ class GameScene extends Phaser.Scene {
       progression: {
         stress: 30,
         radar: { time: 25 },
-        dispenser: { time: 10, food: 50 },
-        hunt: { time: 120, food: 200 },
+        paste_dispenser: { time: 10, food: 50 },
+        hunt: { time: 120, food: 600 },
         craft: {
-          radar: 10,
-          dispenser: 40,
-          table: 80,
-          hunt: 80
+          radar: [10, 50, 100],
+          paste_dispenser: [40, 60, 90, 130, 150],
+          table: [80, 80, 80, 80],
+          hunt: [150, 150, 150],
+        },
+        craftCount: {
+          radar: 0,
+          paste_dispenser: 0,
+          table: 0,
+          hunt: 0,
         },
         currNeedIdx: 0,
         needs: [
@@ -141,6 +147,8 @@ class GameScene extends Phaser.Scene {
         ]
       )
       const x = builder.x - (32 + builder.width / 2)
+      this.data.progression.craftCount[made]++
+      this.ui.updateShoppingList()
       const item = new Package(this, x, builder.y, made)
       item.setActive(true)
       item.setVisible(true)
