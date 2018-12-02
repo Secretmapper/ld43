@@ -35,7 +35,10 @@ class BootScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     })
-    this.load.image('bubble', 'assets/images/bubble.png')
+    this.load.spritesheet('bubble', 'assets/images/bubble.png', {
+      frameWidth: 16,
+      frameHeight: 16
+    })
     this.load.image('radar', 'assets/images/radar.png')
     this.load.image('hunt', 'assets/images/hunt.png')
   }

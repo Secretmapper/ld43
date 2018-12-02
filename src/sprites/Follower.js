@@ -22,6 +22,15 @@ class Follower extends Phaser.GameObjects.Sprite {
     this.elapsed = 0
     this.WANDER_TIME = this.getRandomWanderTime()
     this.setDepth(this.scene.depths.follower)
+
+    this.stress = 0
+    this.STRESS_3 = 5000
+    this.STRESS_2 = this.STRESS_3 * (2/3)
+    this.STRESS_1 = this.STRESS_3 * (1/3)
+
+    this.bubble = this.scene.add.sprite(config.x + this.width, config.y, 'bubble', 1)
+    this.bubble.setDepth(this.scene.depths.bubble)
+    this.bubble.setOrigin(0, 1)
   }
 
   setTarget (target) {
@@ -39,16 +48,43 @@ class Follower extends Phaser.GameObjects.Sprite {
 
   untake () {
     if (this._taker) {
+      this.target = null
       this._taker.untakeFollower(this)
       this._taker = null
       this.body.setImmovable(false)
     }
   }
 
+  applyStress (delta) {
+    this.stress += delta
+
+    console.log('apply', delta, this.stress)
+    if (this.stress > this.STRESS_3) {
+      this.untake()
+    }
+  }
+
+  getStressFrame () {
+    if (this.stress > this.STRESS_2) {
+      return 1
+    } else if (this.stress > this.STRESS_1) {
+      return 2 
+    } else if (this.stress > 0) {
+      return 3
+    }
+  }
+
   update (time, delta) {
     this.body.velocity.multiply(new Phaser.Math.Vector2(0.9))
+    this.bubble.x = this.x
+    this.bubble.y = this.y
+
+    this.bubble.setVisible(this.stress > 0)
+    this.bubble.setFrame(this.getStressFrame())
 
     if (this._taker) return
+
+    this.stress = Math.max(0, delta - delta)
 
     if (this.target) {
       const steeringForce = this.seek(this, this.target, 100)

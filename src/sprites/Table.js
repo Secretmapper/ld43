@@ -11,7 +11,7 @@ class Table extends Building {
     this.elapsed = 0
     this.making = null
 
-    this.bubble = this.scene.add.sprite(config.x + this.width, config.y, 'bubble')
+    this.bubble = this.scene.add.sprite(config.x + this.width, config.y, 'bubble', 0)
     this.bubble.setDepth(99999)
     this.bubble.setOrigin(1)
     this.scene.add.tween({
@@ -24,7 +24,7 @@ class Table extends Building {
       ease: 'Linear'
     })
 
-    this.WAITING_TIME = 10
+    this.WAITING_TIME = 5000
   }
 
   get canMake () {
@@ -54,6 +54,8 @@ class Table extends Building {
 
     if (this.hasUser && this.making) {
       this.elapsed += delta
+
+      this._follower.applyStress(delta)
 
       if (this.elapsed >= TIME) {
         this.scene.addScience(this.getTickScore(), this)

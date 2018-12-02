@@ -18,7 +18,9 @@ class Radar extends Building {
 
   update (time, delta) {
     super.update(time, delta)
-    if (this._follower) {
+
+    if (this.hasUser) {
+      this._follower.applyStress(delta)
       this._follower.flipX = false
     }
   }

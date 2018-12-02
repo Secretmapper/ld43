@@ -19,6 +19,8 @@ class Hunt extends Building {
     if (this.hasUser) {
       this.elapsed += delta
 
+      this._follower.applyStress(delta)
+
       if (this.elapsed >= TIME) {
         this.elapsed -= TIME
       }
