@@ -12,10 +12,27 @@ class Radar extends Building {
       callbackScope: this,
       loop: true
     })
-}
+    this.body.setSize(16, 48)
+    this.body.setOffset(32, 16)
+  }
+
+  update (time, delta) {
+    super.update(time, delta)
+    if (this._follower) {
+      this._follower.flipX = false
+    }
+  }
 
   onLoop (time, delta) {
     this.scene.makeContact(this)
+  }
+
+  takeFollower (follower) {
+    super.takeFollower(
+      follower,
+      this.x,
+      this.y + this.height / 2 - follower.height / 2 - 2
+    )
   }
 }
 

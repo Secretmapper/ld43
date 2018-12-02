@@ -32,10 +32,6 @@ class Hunt extends Building {
       this.y + this.height / 2
     )
   }
-
-  untakeFollower (follower) {
-    super.untakeFollower(follower)
-  }
 }
 
 export default Hunt
