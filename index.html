@@ -16,6 +16,8 @@
         }
         html,
         body {
+            font-family: "Kremlin";
+            background: #F2CCA3;
             margin: 0;
             padding: 0;
             image-rendering: optimizeSpeed;              /* Older versions of FF */
@@ -25,15 +27,15 @@
             image-rendering: crisp-edges;                /* Possible future browsers. */
             -ms-interpolation-mode: nearest-neighbor;    /* IE (non standard naming) */
             image-rendering: pixelated;                  /* Chrome 41 */
-            height: 100%;
-            width: 100%;
-            display: flex;
-            flex: 1;
-            justify-content: center;
-            align-items: center;
+            color: white;
         }
         #content {
-            height: 600px;
+            margin: auto;
+            height: 500px;
+            width: 800px;
+        }
+        .content {
+            margin: auto;
             width: 800px;
         }
     </style>
@@ -41,5 +43,38 @@
 
 <body>
     <div id="content"></div>
-<script type="text/javascript" src="./dev/vendor.js"></script><script type="text/javascript" src="./dev/app.js"></script></body>
-</html>
+    <div class="content">
+        <h1>Satiate!</h1>
+        <div>
+            AN ALIEN WITH AN INSATIABLE APPETITE HAS ATTACKED YOUR CAMP. SATIATE ITS CRAVINGS USING ANY MEANS NECESSARY... EVEN IF IT MEANS SACRIFICING YOUR PEOPLE
+        </div>
+        <div>
+            <ul>
+                <li>SPACE - FOLLOW (WHEN NEAR PERSON)</li>
+                <li>Z - ASSIGN TO BUILDING (WHEN NEAR BUILDING)</li>
+                <li>X - REMOVE ALL CURRENT FOLLOWERS</li>
+            </ul>
+        </div>
+        <div>
+            TIPS:
+            <ul>
+                <li>
+                    GAME RAMPS UP IN DIFFICULTY. PLAN ACCORDINGLY
+                </li>
+                <li>
+                    MAKE PROPAGANDA TOWERS TO INCREASE HUMAN COUNT, THEN DISPENSERS TO ALLOW MORE TO BE PROCESSED, THEN HOSPITALS TO DECREASE EFFECTS OF STRESS
+                </li>
+                <li>
+                    A DISPENSER PRODUCES 50 FOOD AND 10 SECONDS TO PROCESS. YOU MUST TAKE THIS INTO ACCOUNT. IF YOU ONLY HAVE ONE DISPENSER, YOU WILL NEED AT LEAST 30 SECONDS TO PRODUCE 150 FOOD.
+                </li>
+                <li>
+                    YOU CAN KEEP PRESSING SPACE AND MAKE MORE THAN ONE PERSON FOLLOW YOU.
+                </li>
+                <li>
+                    IT TAKES 30 SECONDS FOR STRESS TO PRODUCE BURNOUT, HOSPITALS INCREASE IT BY ANOTHER 30 SECONDS
+                </li>
+            </ul>
+        </div>
+    </div>
+</body></html>
+<script type="text/javascript" src="./dev/vendor.js"></script><script type="text/javascript" src="./dev/app.js"></script>

@@ -20,6 +20,12 @@ class ShoppingList {
           this.scene.data.progression.craft.paste_dispenser[0] * 1000
         ],
         [
+          'antistress',
+          'Hospital',
+          'Applies a GLOBAL anti-stress buff',
+          this.scene.data.progression.craft.antistress[0] * 1000
+        ],
+        [
           'table',
           'Workbench',
           'Allows humans to craft/research',
@@ -31,12 +37,6 @@ class ShoppingList {
           'Allows humans to produce livestock',
           this.scene.data.progression.craft.hunt[0] * 1000
         ],
-        [
-          'antistress',
-          'Hospital',
-          'Applies a GLOBAL anti-stress buff',
-          this.scene.data.progression.craft.antistress[0] * 1000
-        ]
       ]
     }
     this.createUI()
