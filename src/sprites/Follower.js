@@ -58,7 +58,6 @@ class Follower extends Phaser.GameObjects.Sprite {
   applyStress (delta) {
     this.stress += delta
 
-    console.log('apply', delta, this.stress)
     if (this.stress > this.STRESS_3) {
       this.untake()
     }
@@ -84,7 +83,7 @@ class Follower extends Phaser.GameObjects.Sprite {
 
     if (this._taker) return
 
-    this.stress = Math.max(0, delta - delta)
+    this.stress = Math.max(0, this.stress - delta)
 
     if (this.target) {
       const steeringForce = this.seek(this, this.target, 100)
