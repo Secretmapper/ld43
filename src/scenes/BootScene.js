@@ -36,6 +36,10 @@ class BootScene extends Phaser.Scene {
 
     this.load.audio('theme', ['assets/ld43.ogg', 'assets/ld43.mp3'])
     this.load.audio('dispenser_sfx', ['assets/audio/dispenser.ogg', 'assets/audio/dispenser.mp3'])
+    this.load.audio('aye_sfx', ['assets/audio/sfx/aye.ogg', 'assets/audio/sfx/aye.mp3'])
+    this.load.audio('ok_sfx', ['assets/audio/sfx/ok.ogg', 'assets/audio/sfx/ok.mp3'])
+    this.load.audio('where_sfx', ['assets/audio/sfx/where.ogg', 'assets/audio/sfx/where.mp3'])
+
     this.load.image('player', 'assets/images/player.png')
     this.load.image('elder', 'assets/images/elder.png')
     this.load.image('table', 'assets/images/table.png')

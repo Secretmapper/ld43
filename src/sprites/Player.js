@@ -23,6 +23,11 @@ class Player extends Phaser.GameObjects.Sprite {
     this.body.setCollideWorldBounds(true)
 
     this.movementVector = new Phaser.Math.Vector2()
+    this.sfx = {
+      ok: this.scene.sound.add('ok_sfx'),
+      aye: this.scene.sound.add('aye_sfx'),
+      where: this.scene.sound.add('where_sfx')
+    }
   }
 
   update () {
@@ -87,6 +92,7 @@ class Player extends Phaser.GameObjects.Sprite {
       ) {
         const follower = this.followers.pop()
 
+        this.playCallSfx()
         this.hoveredBuilding.approachedBy(follower)
         follower.setTarget(this.hoveredBuilding)
       }
@@ -118,7 +124,14 @@ class Player extends Phaser.GameObjects.Sprite {
   addFollower (follower) {
     if (!this.carrying) {
       this.followers.push(follower)
+      this.playCallSfx()
     }
+  }
+
+  playCallSfx () {
+    const key = Phaser.Math.RND.pick(['ok', 'aye', 'where'])
+
+    this.sfx[key].play()
   }
 
   clearFollowers () {

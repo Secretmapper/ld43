@@ -46,7 +46,23 @@ class GameUI {
     this.shoppingList = new ShoppingList(scene, controls)
 
     this.spots = {
-      paste_dispenser: scene.physics.add.group({ key: 'paste_dispenser', repeat: 4, setXY: { x: 600, y: 130, stepY: 80 } }),
+      paste_dispenser: scene.physics.add.group([
+        {
+          key: 'paste_dispenser',
+          repeat: 0,
+          setXY: { x: 520, y: 130, stepX: 120 }
+        },
+        {
+          key: 'paste_dispenser',
+          repeat: 1,
+          setXY: { x: 400, y: 210, stepX: 120 }
+        },
+        {
+          key: 'paste_dispenser',
+          repeat: 1,
+          setXY: { x: 400, y: 210 + 80, stepX: 120 }
+        }
+      ]),
       radar: scene.physics.add.group({ key: 'radar', repeat: 2, setXY: { x: 280, y: 380, stepX: 80 } }),
       hunt: scene.physics.add.group({ key: 'hunt', repeat: 2, setXY: { x: 200, y: 50, stepX: 100 } }),
       table: scene.physics.add.group({ key: 'table', repeat: 2, setXY: { x: 100, y: 400, stepY: -50 } }),
@@ -82,10 +98,12 @@ class GameUI {
         'sacrifice',
         [
           'You have no food! Sacrifices must be made! Turn Humans',
-          'To Food Paste through the dispenser on the top right!'
+          'To Food Paste through the dispenser on the top center!'
         ]
       )
     }
+
+    this.updateFoodColor()
     if (this.currTime <= 0) {
       this.scene.demandSacrifice()
 
@@ -97,6 +115,18 @@ class GameUI {
 
   update () {
     this.shoppingList.update()
+    this.updateFoodColor()
+  }
+
+  updateFoodColor () {
+    const need = this.scene.getCurrentProgression().food
+    if (this.scene.data.food < need && this.currTime <= 30) {
+      this.food.setTint(0xff0000)
+    } else if (this.scene.data.food >= need) {
+      this.food.setTint(0x00ff00)
+    } else {
+      this.food.setTint(0xffffff)
+    }
   }
 
   showSpots (key) {

@@ -18,7 +18,7 @@ class GameScene extends Phaser.Scene {
   preload () {}
 
   create () {
-    var music = this.sound.add('theme')
+    var music = this.sound.add('theme', { volume: 0.2 })
     music.play({ loop: true })
 
     this.data = {
@@ -44,9 +44,9 @@ class GameScene extends Phaser.Scene {
         currNeedIdx: 0,
         needs: [
           [90, 50],
-          [75, 150],
+          [90, 150],
           [60, 250],
-          [60, 600]
+          [60, 300]
         ]
       }
     }
@@ -80,7 +80,7 @@ class GameScene extends Phaser.Scene {
     
     const t = new Table({ scene: this, x: 100, y: 450 })
     this.buildings.add(t, true)
-    this.buildings.add(new PasteDispenser({ scene: this, x: 600, y: 50 }), true)
+    this.buildings.add(new PasteDispenser({ scene: this, x: 400, y: 130 }), true)
     this.buildings.add(new Hunt({ scene: this, x: 100, y: 50 }), true)
     this.buildings.add(new Radar({ scene: this, x: 200, y: 380 }), true)
 

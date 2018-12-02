@@ -14,16 +14,16 @@ class ShoppingList {
           this.scene.data.progression.craft.radar[0] * 1000
         ],
         [
-          'table',
-          'Workbench',
-          'Allows humans to craft/research',
-          this.scene.data.progression.craft.table[0] * 1000
-        ],
-        [
           'paste_dispenser',
           'Bioessence Converter',
           'Turns biomaterial into food',
           this.scene.data.progression.craft.paste_dispenser[0] * 1000
+        ],
+        [
+          'table',
+          'Workbench',
+          'Allows humans to craft/research',
+          this.scene.data.progression.craft.table[0] * 1000
         ],
         [
           'hunt',
@@ -175,7 +175,7 @@ class ShoppingList {
       const time = times[Math.min(times.length - 1, count)] * 1000
 
       this.costTexts[k].setText(
-        `${this.costTexts[k].title} (${time / 1000} SEC)`,
+        `${this.costTexts[k].title} (${time / 1000} SEC)`.toUpperCase(),
       )
     }
   }
