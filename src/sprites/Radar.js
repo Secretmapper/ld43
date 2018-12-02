@@ -14,6 +14,8 @@ class Radar extends Building {
     })
     this.body.setSize(16, 48)
     this.body.setOffset(32, 16)
+    this.overlapper.body.setSize(16 + 30, 48 + 20)
+    this.overlapper.body.setOffset(22, 8)
     this.WAITING_TIME = this.scene.data.progression.radar.time * 1000
     this.making = 'CONTACT'
   }

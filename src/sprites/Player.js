@@ -17,6 +17,7 @@ class Player extends Phaser.GameObjects.Sprite {
     this.carrying = null
     this.controls = config.controls
     this._pressedAction = false
+    this._pressedMoveTo = false
     this.setDepth(this.scene.depths.follower)
     this.body.setCollideWorldBounds(true)
 
@@ -27,7 +28,7 @@ class Player extends Phaser.GameObjects.Sprite {
     this.callZone.x = this.x - this.callZone.body.radius - this.width / 2
     this.callZone.y = this.y - this.callZone.body.radius + this.height
 
-    const { cursors, action, cancel } = this.controls
+    const { cursors, action, moveTo, cancel } = this.controls
 
     this.body.setVelocity(0)
 
@@ -61,23 +62,6 @@ class Player extends Phaser.GameObjects.Sprite {
     }
 
     if (action.isDown) {
-      if (!this._pressedAction) {
-        if (this.hoveredBuilding instanceof Table) {
-          if (this.hoveredBuilding.canMake) {
-            this.scene.showShoppingList(this.hoveredBuilding)
-          }
-        }
-
-        if (
-          this.hoveredBuilding && !this.hoveredBuilding.isFilled
-          && this.followers.length > 0
-        ) {
-          const follower = this.followers.pop()
-
-          this.hoveredBuilding.approachedBy(follower)
-          follower.setTarget(this.hoveredBuilding)
-        }
-      }
     } else {
       if (this.carrying) {
         this.scene.hideSpots(this.carrying)
@@ -85,7 +69,27 @@ class Player extends Phaser.GameObjects.Sprite {
       }
     }
 
+    if (moveTo.isDown && !this._pressedMoveTo) {
+      if (this.hoveredBuilding instanceof Table) {
+        if (this.hoveredBuilding.canMake) {
+          this.scene.showShoppingList(this.hoveredBuilding)
+        }
+      }
+
+      if (
+        this.hoveredBuilding && !this.hoveredBuilding.isFilled
+        && this.followers.length > 0
+      ) {
+        const follower = this.followers.pop()
+
+        this.hoveredBuilding.approachedBy(follower)
+        follower.setTarget(this.hoveredBuilding)
+      }
+    }
+
+
     this._pressedAction = action.isDown
+    this._pressedMoveTo = moveTo.isDown
 
     if (cancel.isDown) {
       this.clearFollowers()

@@ -18,6 +18,7 @@ class PasteDispenser extends Building {
   takeFollower (follower) {
     this._isKilling = true
 
+    this.untakeFollower()
     follower.setActive(false)
     follower.setVisible(false)
     follower.untake()
@@ -47,7 +48,7 @@ class PasteDispenser extends Building {
   onFinishTakingFollower (tween, target) {
     this.loading.setVisible(false)
     this._isKilling = false
-    this.scene.addFood(50)
+    this.scene.addFood(this.scene.data.progression.dispenser.food)
   }
 
   resetAs (type) {

@@ -129,7 +129,7 @@ class Follower extends Phaser.GameObjects.Sprite {
     const y = Math.sin(angle) * radius
     this.wanderTarget.body.position.set(
       Phaser.Math.Clamp(this.x + x, 150, 400),
-      Phaser.Math.Clamp(this.y + y, 150, 400),
+      Phaser.Math.Clamp(this.y + y, 100, 400),
     )
   }
 

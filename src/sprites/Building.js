@@ -17,6 +17,18 @@ class Building extends Phaser.GameObjects.Sprite {
     this.loading.setVisible(false)
     this.loading.setDepth(this.scene.depths.loadingBars)
     this.elapsed = 0
+
+    this.overlapper = new Phaser.GameObjects.Zone(
+      config.scene,
+      config.x,
+      config.y,
+      this.width + 20,
+      this.height + 10
+    )
+    config.scene.physics.world.enable(this.overlapper)
+    this.overlapper.body.setImmovable(true)
+    this.overlapper.building = this
+    this.scene.buildingsOverlap.add(this.overlapper)
   }
 
   update (time, delta) {

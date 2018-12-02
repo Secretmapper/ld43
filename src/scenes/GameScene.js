@@ -22,14 +22,19 @@ class GameScene extends Phaser.Scene {
       progression: {
         stress: 30,
         radar: { time: 25 },
-        dispenser: { time: 10 },
-        hunt: { time: 20 },
+        dispenser: { time: 10, food: 50 },
+        hunt: { time: 120, food: 100 },
         craft: {
           radar: 10,
           dispenser: 40,
           table: 80,
           hunt: 80
-        }
+        },
+        currNeedIdx: 0,
+        needs: [
+          [10, 50],
+          [90, 150]
+        ]
       }
     }
     this.sprites = {}
@@ -42,7 +47,9 @@ class GameScene extends Phaser.Scene {
     }
     const controls = {
       action: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
-      cancel: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
+      moveTo: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
+      enter: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER),
+      cancel: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X),
       cursors: this.input.keyboard.createCursorKeys()
     }
     this.player = new Player({
@@ -53,6 +60,7 @@ class GameScene extends Phaser.Scene {
     })
     this.packages = this.add.group({ runChildUpdate: true })
     this.buildings = this.add.group({ runChildUpdate: true })
+    this.buildingsOverlap = this.physics.add.group({ runChildUpdate: true })
     
     const t = new Table({ scene: this, x: 100, y: 450 })
     this.buildings.add(t, true)
@@ -63,7 +71,7 @@ class GameScene extends Phaser.Scene {
     this.followers = this.add.group({ runChildUpdate: true })
     this.followers.classType = Follower
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 2; i++) {
       const obj = new Follower({
         scene: this,
         x: 250 + (i % 5) * 24,
@@ -83,6 +91,16 @@ class GameScene extends Phaser.Scene {
 
     this.addOverlapCollisionListeners()
     this._pressedAction = false
+  }
+
+  demandSacrifice (sacrifice) {
+    this.data.food -= this.getCurrentProgression().food
+    this.data.progression.currNeedIdx++
+  }
+
+  getCurrentProgression () {
+    const prog = this.data.progression.needs[this.data.progression.currNeedIdx]
+    return { time: prog[0], food: prog[1] }
   }
 
   update (time, delta) {
@@ -125,13 +143,13 @@ class GameScene extends Phaser.Scene {
 
   addFood (amount) {
     this.data.food += amount
-    this.ui.setText('food', this.data.food)
+    this.ui.setFood(this.data.food)
   }
 
   addScience (amount, building) {
-    this.data.science += amount
-    this.ui.setText('science', this.data.science)
-    this.ui.addFloatText(building.x, building.y, `+${amount}`)
+    // this.data.science += amount
+    // this.ui.setText('science', this.data.science)
+    // this.ui.addFloatText(building.x, building.y, `+${amount}`)
   }
 
   makeContact (building) {
@@ -142,7 +160,8 @@ class GameScene extends Phaser.Scene {
     return a.active && b.active
   }
 
-  onPlayerBuildingOverlap (player, building) {
+  onPlayerBuildingOverlap (player, overlap) {
+    const building = overlap.building
     player.setHoveredBuilding(building)
   }
 
@@ -183,6 +202,9 @@ class GameScene extends Phaser.Scene {
   }
 
   onCallZoneFollowerOverlap (callZone, follower) {
+    if (this.ui.shoppingListShown) {
+      return
+    }
     const player = callZone.player
 
     const pressedAction = (player.controls.action.isDown && !this._pressedAction)
@@ -224,6 +246,12 @@ class GameScene extends Phaser.Scene {
     this.physics.add.collider(
       this.player,
       this.buildings,
+      null,
+      this.bothActive
+    )
+    this.physics.add.overlap(
+      this.player,
+      this.buildingsOverlap,
       this.onPlayerBuildingOverlap,
       this.bothActive
     )

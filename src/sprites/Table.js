@@ -56,6 +56,7 @@ class Table extends Building {
   onFinish (making) {
     this.scene.addScience(this.getTickScore(), this)
     this.scene.deliver(this, making)
+    this._follower.untake()
   }
 }
 

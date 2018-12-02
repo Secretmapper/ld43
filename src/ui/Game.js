@@ -4,19 +4,31 @@ class GameUI {
     this.scene = scene
     const { width, height } = this.scene.sys.canvas
 
-    this.science = scene.add.text(
-      10,
-      height - 30,
-      'Science: 0',
+    this.food = scene.add.text(
+      width - 140,
+      height - 60,
+      '',
       { font: '20px Arial', fill: 'white' }
     )
 
-    this.food = scene.add.text(
-      width - 100,
+    this.currTime = this.scene.getCurrentProgression().time + 1
+    this.timer = scene.add.text(
+      width - 140,
       height - 30,
-      'Food: 0',
+      '',
       { font: '20px Arial', fill: 'white' }
     )
+    this.timedEvent = scene.time.addEvent({
+      delay: 1000,
+      callback: this.onLoop,
+      callbackScope: this,
+      loop: true
+    })
+
+    // set food
+    this.setFood(0)
+    // set time
+    this.onLoop()
 
     this.shoppingList = new ShoppingList(scene, controls)
 
@@ -40,6 +52,23 @@ class GameUI {
     })
   }
 
+  onLoop () {
+    this.currTime--
+
+    var date = new Date(null);
+    date.setSeconds(this.currTime)
+    const result = date.toISOString().substr(14, 5)
+    this.timer.setText(`Time: ${result}`)
+
+    if (this.currTime <= 0) {
+      this.scene.demandSacrifice()
+
+      const level = this.scene.getCurrentProgression()
+      this.currTime = level.time
+      this.setFood(this.scene.data.food)
+    }
+  }
+
   update () {
     this.shoppingList.update()
   }
@@ -60,6 +89,10 @@ class GameUI {
     this[key].setText(`${key}: ${num}`)
   }
 
+  setFood(num) {
+    this.food.setText(`Food: ${num}/${this.scene.getCurrentProgression().food}`)
+  }
+
   addFloatText (x, y, message) {
     const text = this.scene.add.text(
       x,
@@ -78,6 +111,10 @@ class GameUI {
 
   showShoppingList () {
     this.shoppingList.show()
+  }
+
+  get shoppingListShown () {
+    return this.shoppingList.toShow || this.shoppingList.showing
   }
 }
 

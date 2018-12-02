@@ -17,6 +17,7 @@ class Hunt extends Building {
 
   onFinish () {
     this.making = 'COW'
+    this.scene.addFood(this.scene.data.progression.hunt.food)
   }
 
   takeFollower (follower) {

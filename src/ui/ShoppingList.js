@@ -71,16 +71,16 @@ class ShoppingList {
   }
 
   update () {
-    const { controls: { cursors, action, cancel } } = this
+    const { controls: { cursors, action, cancel, enter } } = this
 
     if (this.showing && this.toShow) {
-      if (Phaser.Input.Keyboard.JustDown(cursors.down)) {
+      if (cursors.down.isDown && !this._pressedDown) {
         this.data.curIdx = Math.min(
           this.data.items.length - 1, this.data.curIdx + 1
         )
-      } else if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
+      } else if (cursors.up.isDown && !this._pressedUp) {
         this.data.curIdx = Math.max(0, this.data.curIdx - 1)
-      } else if (action.isDown && !this._pressedAction) {
+      } else if ((action.isDown && !this._pressedAction) || Phaser.Input.Keyboard.JustDown(enter)) {
         // buy
         this.scene.buyItem(this.data.items[this.data.curIdx])
         this.hide()
@@ -89,6 +89,8 @@ class ShoppingList {
       }
     }
 
+    this._pressedUp = cursors.up.isDown
+    this._pressedDown = cursors.down.isDown
     this._pressedAction = action.isDown
     this.cursor.y = (this.data.curIdx + 1) * (this.tileBounds.height)
   }
