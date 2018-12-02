@@ -20,6 +20,11 @@ class GameScene extends Phaser.Scene {
       science: 0
     }
     this.sprites = {}
+    this.depths = {
+      follower: 90,
+      player: 91,
+      ui: 1000
+    }
     const controls = {
       action: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
       cancel: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
@@ -78,18 +83,16 @@ class GameScene extends Phaser.Scene {
     this.ui.showShoppingList()
   }
 
-  buyItem () {
-    this.data.shop.make('paste_dispenser')
+  buyItem (key) {
+    this.data.shop.make(key)
   }
 
   deliver (builder, made) {
-    if (made === 'paste_dispenser') {
-      const x = builder.x - (32 + builder.width / 2)
-      const item = new Package(this, x, builder.y, made)
-      item.setActive(true)
-      item.setVisible(true)
-      this.packages.add(item, true)
-    }
+    const x = builder.x - (32 + builder.width / 2)
+    const item = new Package(this, x, builder.y, made)
+    item.setActive(true)
+    item.setVisible(true)
+    this.packages.add(item, true)
   }
 
   showSpots (carrying) {
@@ -138,8 +141,16 @@ class GameScene extends Phaser.Scene {
     ) {
       spot.taken = true
       item.destroy()
-      const b = this.buildings.get(spot.x, spot.y)
-      b.resetAs(Building.PASTE_DISPENSER)
+      if (item.key === 'paste_dispenser') {
+        const b = this.buildings.get(spot.x, spot.y)
+        b.resetAs(Building.PASTE_DISPENSER)
+      } else if (item.key === 'table') {
+        this.buildings.add(new Table({ scene: this, x: spot.x, y: spot.y }), true)
+      } else if (item.key === 'hunt') {
+        this.buildings.add(new Hunt({ scene: this, x: spot.x, y: spot.y }), true)
+      } else if (item.key === 'radar') {
+        this.buildings.add(new Radar({ scene: this, x: spot.x, y: spot.y }), true)
+      }
     }
   }
 

@@ -24,7 +24,7 @@ class Table extends Building {
       ease: 'Linear'
     })
 
-    this.WAITING_TIME = 5000
+    this.WAITING_TIME = 10
   }
 
   get canMake () {

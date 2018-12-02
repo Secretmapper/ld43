@@ -3,11 +3,34 @@ class ShoppingList {
     this.scene = scene
     this.controls = controls
 
+    this.data = {
+      curIdx: 0,
+      items: [
+        [
+          'paste_dispenser',
+          'Nutrient Paste Dispenser',
+          'Turns biomaterial into food',
+          ''
+        ],
+        [
+          'table',
+          'Workbench',
+          'Allows humans to craft/research',
+        ],
+        [
+          'hunt',
+          'Farm',
+          'Allows humans to produce livestock',
+        ],
+        [
+          'radar',
+          'Propaganda Tower',
+          'Attract other humans to the camp',
+        ]
+      ]
+    }
     this.createUI()
 
-    this.data = {
-      curIdx: 0
-    }
     this.toShow = false
     this.showing = false
 
@@ -49,12 +72,14 @@ class ShoppingList {
 
     if (this.showing && this.toShow) {
       if (Phaser.Input.Keyboard.JustDown(cursors.down)) {
-        this.data.curIdx = Math.max(0, this.data.curIdx++)
+        this.data.curIdx = Math.min(
+          this.data.items.length - 1, this.data.curIdx + 1
+        )
       } else if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
-        this.data.curIdx = Math.max(0, this.data.curIdx--)
+        this.data.curIdx = Math.max(0, this.data.curIdx - 1)
       } else if (action.isDown && !this._pressedAction) {
         // buy
-        this.scene.buyItem()
+        this.scene.buyItem(this.data.items[this.data.curIdx][0])
         this.hide()
       } else if (Phaser.Input.Keyboard.JustDown(cancel)) {
         this.hide()
@@ -95,20 +120,13 @@ class ShoppingList {
     container.add([
       dlg,
       cursor,
-      ...this.makeRow(
-        tileBounds,
-        'Nutrient Paste Dispenser',
-        'Turns biomaterial into food'
-      ),
-      ...this.makeRow(
-        tileBounds,
-        'Workbench',
-        'Allows humans to craft/research',
-        1
-      )
+      ...this.data.items.reduce((arr, item, i) => (
+        arr.concat(this.makeRow(tileBounds, item[1], item[2], i))
+      ), [])
     ])
 
     container.y = 600
+    container.setDepth(this.scene.depths.ui)
 
     this.tileBounds = tileBounds
     this.cursor = cursor

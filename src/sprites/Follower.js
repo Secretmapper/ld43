@@ -21,6 +21,7 @@ class Follower extends Phaser.GameObjects.Sprite {
     this.genRandomWanderTarget()
     this.elapsed = 0
     this.WANDER_TIME = this.getRandomWanderTime()
+    this.setDepth(this.scene.depths.follower)
   }
 
   setTarget (target) {

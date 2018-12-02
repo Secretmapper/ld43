@@ -17,6 +17,7 @@ class Player extends Phaser.GameObjects.Sprite {
     this.carrying = null
     this.controls = config.controls
     this._pressedAction = false
+    this.setDepth(this.scene.depths.follower)
   }
 
   update () {
@@ -29,9 +30,11 @@ class Player extends Phaser.GameObjects.Sprite {
 
     if (cursors.left.isDown) {
       this.body.setVelocityX(-SPEED)
+      this.flipX = true
     }
     else if (cursors.right.isDown) {
       this.body.setVelocityX(SPEED)
+      this.flipX = false
     } else {
       this.body.setVelocityX(0)
     }
@@ -82,7 +85,6 @@ class Player extends Phaser.GameObjects.Sprite {
     }
 
     this.hoveredBuilding = undefined
-    this.flipX = this.body.velocity.x < 0 || this._taken
   }
 
   carry (itemPackage) {
