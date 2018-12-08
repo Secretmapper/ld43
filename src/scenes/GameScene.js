@@ -139,7 +139,7 @@ class GameScene extends Phaser.Scene {
       this.onFoodNegative()
       this.ui.timedEvent.remove(false)
     } else {
-      if ((this.data.progression.needs.length - 1) < this.data.progression.currNeedIdx) {
+      if ((this.data.progression.needs.length - 2) < this.data.progression.currNeedIdx) {
         console.log('DONE!')
       } else {
         this.data.progression.currNeedIdx++
